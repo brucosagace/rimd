@@ -3,7 +3,7 @@
 namespace Per;
 
 class Rimd extends \Michelf\Markdown {
-	public $noscript_suffix = "</noscript></i>";
+	protected $noscript_suffix = "</noscript></i>";
 
 	protected function _doImages_inline_callback($matches) {
 		$whole_match	= $matches[1];
