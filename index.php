@@ -1,3 +1,16 @@
+<?php
+	# Install PSR-0-compatible class autoloader
+	spl_autoload_register(function($class){
+		require preg_replace('{\\\\|_(?!.*\\\\)}', DIRECTORY_SEPARATOR, ltrim($class, '\\')).'.php';
+	});
+
+	# Get Markdown class
+	use \Michelf\Markdown;
+
+	# Read file and pass content through the Markdown praser
+	$text = file_get_contents('Readme.md');
+	$html = Markdown::defaultTransform($text);
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,7 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="css/rimd.css">
 </head>
 <body>
-
+	<?php echo $html; ?>
 	<script type="text/javascript" src="js/rimd.js"></script>
 </body>
 </html>
