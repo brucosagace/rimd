@@ -3,7 +3,7 @@
 namespace Per;
 
 class Rimd extends \Michelf\Markdown {
-	public $noscript_suffix = '</noscript>';
+	public $noscript_suffix = "</noscript></i>";
 
 	protected function _doImages_inline_callback($matches) {
 		$whole_match	= $matches[1];
@@ -15,7 +15,7 @@ class Rimd extends \Michelf\Markdown {
 		$url = $this->encodeAttribute($url);
 
 		# mod
-		$result = '<noscript>';
+		$result = $this->noscript_prefix($url);
 		# @end mod
 
 		$result .= "<img src=\"$url\" alt=\"$alt_text\"";
@@ -45,9 +45,9 @@ class Rimd extends \Michelf\Markdown {
 		if (isset($this->urls[$link_id])) {
 			$url = $this->encodeAttribute($this->urls[$link_id]);
 			# mod
-			$result = '<noscript>';
+			$result = $this->noscript_prefix($url);
 			# @end mod
-			$result = "<img src=\"$url\" alt=\"$alt_text\"";
+			$result .= "<img src=\"$url\" alt=\"$alt_text\"";
 			if (isset($this->titles[$link_id])) {
 				$title = $this->titles[$link_id];
 				$title = $this->encodeAttribute($title);
@@ -65,5 +65,23 @@ class Rimd extends \Michelf\Markdown {
 		}
 
 		return $result;
+	}
+
+	protected function noscript_prefix($url) {
+		$result = "<i class=\"rimd_img\"";
+		$padding = $this->get_image_ratio($url);
+		$result .= " style=\"padding-bottom:$padding%;\"";
+		$result .= ">";
+		
+		$result .= "<noscript>";
+		return $result;
+	}
+
+	protected function get_image_ratio($url) {
+		$dimensions = getimagesize($url);
+		$width = $dimensions[0];
+		$height = $dimensions[1];
+
+		return ($height / $width) * 100;
 	}
 }
