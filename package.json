@@ -1,0 +1,20 @@
+{
+  "name": "Rimd",
+  "version": "0.0.0",
+  "description": "Markdown responsive images",
+  "main": "index.php",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.7.1",
+    "grunt-contrib-compass": "~0.6.0",
+    "grunt-contrib-qunit": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://pstenstrm@bitbucket.org/pstenstrm/rimd.git"
+  },
+  "author": "Per Stenström",
+  "license": "BSD-2-Clause"
+}
