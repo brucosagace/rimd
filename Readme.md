@@ -9,6 +9,8 @@ by Michel Fortin
 based on Markdown by John Gruber  
 <http://daringfireball.net/>
 
+Bild på Pirru 
+![Pirru](images/IMGP1463.jpg)
 
 Introduction
 ------------

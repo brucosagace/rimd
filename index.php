@@ -4,12 +4,12 @@
 		require preg_replace('{\\\\|_(?!.*\\\\)}', DIRECTORY_SEPARATOR, ltrim($class, '\\')).'.php';
 	});
 
-	# Get Markdown class
-	use \Michelf\Markdown;
+	# Get Rimd class
+	use \Per\Rimd;
 
 	# Read file and pass content through the Markdown praser
 	$text = file_get_contents('Readme.md');
-	$html = Markdown::defaultTransform($text);
+	$html = Rimd::defaultTransform($text);
 ?>
 <!DOCTYPE html>
 <html>
