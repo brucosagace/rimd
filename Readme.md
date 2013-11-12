@@ -1,13 +1,12 @@
-PHP Markdown
+PHP Rimd
 ============
 
-PHP Markdown Lib 1.3 - 11 Apr 2013
+PHP Rimd Lib 0.0.2 - 12 Nov 2013
 
+extens PHP Markdown Lib 1.3 - 11 Apr 2013
 by Michel Fortin  
 <http://michelf.ca/>
 
-based on Markdown by John Gruber  
-<http://daringfireball.net/>
 
 Bild på Pirru 
 ![Pirru](images/IMGP1463.jpg)
@@ -36,12 +35,7 @@ Requirement
 
 This library package requires PHP 5.3 or later.
 
-Note: The older plugin/library hybrid package for PHP Markdown and
-PHP Markdown Extra is still maintained and will work with PHP 4.0.5 and later.
-
-Before PHP 5.3.7, pcre.backtrack_limit defaults to 100 000, which is too small
-in many situations. You might need to set it to higher values. Later PHP 
-releases defaults to 1 000 000, which is usually fine.
+This library requires but does not include PHP Markdown Lib 1.3 by Michel Fortin. 
 
 
 Usage
@@ -87,132 +81,27 @@ To learn more, see the full list of [configuration variables].
  [configuration variables]: http://michelf.ca/projects/php-markdown/configuration/
 
 
-Public API and Versioning Policy
----------------------------------
-
-Version numbers are of the form *major*.*minor*.*patch*.
-
-The public API of PHP Markdown consist of the two parser classes `Markdown`
-and `MarkdownExtra`, their constructors, the `transform` and `defaultTransform`
-functions and their configuration variables. The public API is stable for
-a given major version number. It might get additions when the minor version
-number increments.
-
-**Protected members are not considered public API.** This is unconventional 
-and deserves an explanation. Incrementing the major version number every time 
-the underlying implementation of something changes is going to give
-nonessential version numbers for the vast majority of people who just use the
-parser.  Protected members are meant to create parser subclasses that behave in
-different ways. Very few people create parser subclasses. I don't want to 
-discourage it by making everything private, but at the same time I can't 
-guarantee any stable hook between versions if you use protected members.
-
-**Syntax changes** will increment the minor number for new features, and the 
-patch number for small corrections. A *new feature* is something that needs a 
-change in the syntax documentation. Note that since PHP Markdown Lib includes
-two parsers, a syntax change for either of them will increment the minor 
-number. Also note that there is nothing perfectly backward-compatible with the
-Markdown syntax: all inputs are always valid, so new features always replace
-something that was previously legal, although generally nonsensical to do.
-
-
-Bugs
-----
-
-To file bug reports please send email to:
-<michel.fortin@michelf.ca>
-
-Please include with your report: (1) the example input; (2) the output you
-expected; (3) the output PHP Markdown actually produced.
-
-If you have a problem where Markdown gives you an empty result, first check 
-that the backtrack limit is not too low by running `php --info | grep pcre`.
-See Installation and Requirement above for details.
-
-
-Version History
----------------
-
-PHP Markdown Lib 1.3 (11 Apr 2013):
-
-This is the first release of PHP Markdown Lib. This package requires PHP 
-version 4.3 or later and is designed to work with PSR-0 autoloading and, 
-optionally with Composer. Here is a list of the changes since 
-PHP Markdown Extra 1.2.6:
-
-*	Plugin interface for WordPress and other systems is no longer present in
-	the Lib package. The classic package is still available if you need it:
-	<http://michelf.ca/projects/php-markdown/classic/>
-
-*	Added `public` and `protected` protection attributes, plus a section about
-	what is "public API" and what isn't in the Readme file.
-
-*	Changed HTML output for footnotes: now instead of adding `rel` and `rev`
-	attributes, footnotes links have the class name `footnote-ref` and
-	backlinks `footnote-backref`.
-
-*	Fixed some regular expressions to make PCRE not shout warnings about POSIX
-	collation classes (dependent on your version of PCRE).
-
-*	Added optional class and id attributes to images and links using the same
-	syntax as for headers:
-
-		[link](url){#id .class}  
-		![img](url){#id .class}
-	
-	It work too for reference-style links and images. In this case you need
-	to put those attributes at the reference definition:
-
-		[link][linkref] or [linkref]  
-		![img][linkref]
-		
-		[linkref]: url "optional title" {#id .class}
-
-*	Fixed a PHP notice message triggered when some table column separator 
-	markers are missing on the separator line below column headers.
-
-*	Fixed a small mistake that could cause the parser to retain an invalid
-	state related to parsing links across multiple runs. This was never 
-	observed (that I know of), but it's still worth fixing.
-
-
 Copyright and License
 ---------------------
 
-PHP Markdown Lib
-Copyright (c) 2004-2013 Michel Fortin  
-<http://michelf.ca/>  
+Copyright (c) 2013 Per Stenström  
+All rights reserved.
+
+PHP Markdown Lib Copyright (c) 2004-2013 Michel Fortin  
+http://michelf.ca/   
 All rights reserved.
 
 Based on Markdown  
 Copyright (c) 2003-2005 John Gruber   
-<http://daringfireball.net/>   
+http://daringfireball.net/   
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-*   Redistributions of source code must retain the above copyright 
-    notice, this list of conditions and the following disclaimer.
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
 
-*   Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the 
-    distribution.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 
-*   Neither the name "Markdown" nor the names of its contributors may
-    be used to endorse or promote products derived from this software
-    without specific prior written permission.
+3. Neither the name "Markdown" nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
-This software is provided by the copyright holders and contributors "as
-is" and any express or implied warranties, including, but not limited
-to, the implied warranties of merchantability and fitness for a
-particular purpose are disclaimed. In no event shall the copyright owner
-or contributors be liable for any direct, indirect, incidental, special,
-exemplary, or consequential damages (including, but not limited to,
-procurement of substitute goods or services; loss of use, data, or
-profits; or business interruption) however caused and on any theory of
-liability, whether in contract, strict liability, or tort (including
-negligence or otherwise) arising in any way out of the use of this
-software, even if advised of the possibility of such damage.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
