@@ -8,7 +8,9 @@
 
 		function init(params){
 			var defaults = {
-				className: 'rimd_img'
+				className: 'rimd_img',
+				widths:    ['320', '600', '1024'],
+				path:      'resize.php/{path}/{src}?width={width}'
 			};
 
 			options = extend(defaults, params);
