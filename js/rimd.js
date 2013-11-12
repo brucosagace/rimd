@@ -19,9 +19,48 @@
 		}
 
 		function doImages() {
-			var images = getElementByClass(options.className);
+			var i, images = getElementByClass(options.className);
 
-			images = images;
+			for (i in images) {
+				if(images.hasOwnProperty(i)) parseImage(images[i]);
+			}
+		}
+
+		function parseImage(image) {
+			var attr = getImageAttributes(image),
+			    newImage;
+			
+			if(!attr.src || !attr.src[1]) return;
+			
+			newImage = createNewImage(attr);
+
+			image.appendChild(newImage);
+		}
+
+		function createNewImage(attr) {
+			var img = document.createElement('img');
+
+			img.src = attr.src[1];
+
+			if(attr.alt && attr.alt[1]) img.alt = attr.alt[1];
+			if(attr.title && attr.title[1]) img.title = attr.title[1];
+
+			return img;
+		}
+
+		function getImageAttributes(image) {
+			var noscript = image.children[0],
+			    content  = noscript.textContent || noscript.innerHTML,
+			    srcRex   = /<img[^>]+src="([^">]+)/g,
+			    altRex   = /<img[^>]+alt="([^">]+)/g,
+			    titleRex = /<img[^>]+title="([^">]+)/g,
+			    result   = {};
+
+			result.src = srcRex.exec(content);
+			result.alt = altRex.exec(content);
+			result.title = titleRex.exec(content);
+
+			return result;
 		}
 
 		function getElementByClass(selector) {
@@ -47,7 +86,6 @@
 				}
 			}
 
-			console.log(result);
 			return result;
 		}
 
