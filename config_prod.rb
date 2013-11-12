@@ -40,7 +40,7 @@ on_stylesheet_saved do |file|
 		else
 			dir = ""
 		end
-
+		puts css_dir + "/" + dir + filename + ".min" + File.extname(file)
 		File.rename(file, css_dir + "/" + dir + filename + ".min" + File.extname(file))
 	end
 end

@@ -3,8 +3,9 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		jshint: {
-			all: '/js/*.js',
+			all: 'js/*.js',
 			options: {
+				ignores: ['js/*.min.js'],
 				latedef: 'nofunc',
 				newcap: true,
 				noempty: true,
@@ -18,7 +19,7 @@ module.exports = function(grunt) {
 			}
 		},
 		qunit: {
-			all: ['/js/tests/**/*.html']
+			all: ['js/tests/**/*.html']
 		},
 		uglify: {
 			options: {
@@ -28,15 +29,21 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: '/js/',
+						cwd: 'js/',
 						src: ['rimd.js'],
-						dest: '/js/',
+						dest: 'js/',
 						ext: '.min.js'
 					}
 				]
 			} 
 		},
 		compass: {
+			clean: {
+				options: {
+					config: 'config_prod.rb',
+					clean: true
+				}
+			},
 			dist: {
 				options: {
 					config: 'config_prod.rb'
