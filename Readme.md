@@ -3,7 +3,7 @@ PHP Rimd
 
 PHP Rimd Lib 0.0.2 - 12 Nov 2013
 
-extens PHP Markdown Lib 1.3 - 11 Apr 2013
+extens PHP Markdown Lib 1.3 - 11 Apr 2013  
 by Michel Fortin  
 <http://michelf.ca/>
 
@@ -87,13 +87,14 @@ Copyright and License
 Copyright (c) 2013 Per Stenström  
 All rights reserved.
 
-PHP Markdown Lib Copyright (c) 2004-2013 Michel Fortin  
-http://michelf.ca/   
+Extends PHP Markdown Lib  
+Copyright (c) 2004-2013 Michel Fortin  
+http://michelf.ca/  
 All rights reserved.
 
 Based on Markdown  
-Copyright (c) 2003-2005 John Gruber   
-http://daringfireball.net/   
+Copyright (c) 2003-2005 John Gruber  
+http://daringfireball.net/  
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
