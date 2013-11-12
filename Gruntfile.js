@@ -14,6 +14,9 @@ module.exports = function(grunt) {
 				strict: true,
 				onevar: true,
 				browser: true, // window, document etc.
+				globals: {
+					Rimd: true
+				},
 				devel: true, // alert, console etc.
 				'-W099': false // Mixed tabs and spaces
 			}
@@ -54,6 +57,12 @@ module.exports = function(grunt) {
 					config: 'config.rb'
 				}
 			}
+		},
+		watch: {
+			scripts: {
+				files: ['js/*.js'],
+				tasks: ['jshint']
+			}
 		}
 	}); 
 
@@ -62,6 +71,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-compass');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Default task(s).
   grunt.registerTask('default', ['jshint', 'qunit', 'uglify', 'compass']);
