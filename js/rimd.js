@@ -10,7 +10,7 @@
 			var defaults = {
 				className: 'rimd_img',
 				widths:    ['320', '600', '1024'],
-				path:      '?width={width}'
+				path:      'resimagecrop.php?image={path}&w={width}'
 			};
 
 			options = extend(defaults, params);
@@ -40,12 +40,9 @@
 		}
 
 		function createNewImage(attr, width) {
-			var params,
-			    img = document.createElement('img');
+			var img = document.createElement('img');
 
-			console.log(width);
-			params = options.path.replace(/\{width\}/, width);
-			img.src = attr.src[1] + params;
+			img.src = options.path.replace(/\{width\}/, width).replace(/\{path\}/, attr.src[1]);
 
 			if(attr.alt && attr.alt[1]) img.alt = attr.alt[1];
 			if(attr.title && attr.title[1]) img.title = attr.title[1];
@@ -103,13 +100,14 @@
 		}
 
 		function getClosestValues (stack, needle) {
-			var lo, hi, 
-			    i   = 0, 
+			var lo  = -1,
+			    hi  = -1,
+			    i   = 0,
 			    len = stack.length;
 
 			for (; i < len; i++) {
-				if(stack[i] <= needle && (lo === undefined || lo < stack[i])) lo = stack[i];
-				if(stack[i] >= needle && (hi === undefined ||hi > stack[i])) hi = stack[i];
+				if(stack[i] <= needle && (lo === -1 || lo < stack[i])) lo = stack[i];
+				if(stack[i] >= needle && (hi === -1 ||hi > stack[i])) hi = stack[i];
 			}
 
 			return ((needle - lo) > (hi - needle)) ? hi : lo;

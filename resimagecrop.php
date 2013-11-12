@@ -26,6 +26,7 @@ $y = intval(getParam('y'));
 $w = intval(getParam('w'));
 $h = intval(getParam('h'));
 $sc = getParam('sc');
+
 if ($img) {
 	// Do a little prep to find the filename of the resized and scaled file, so we can test if it's cached
 	$w ? $width = '-' . $w : $width = '';
@@ -72,11 +73,12 @@ if ($img) {
 		imagejpeg($i, $cachefile);
 	}
 	// Return file
-	header('Content-Type: image/jpg');
-	header('Content-Disposition: attachment; filename=' . $img);
-	readfile($cachefile);
+	//header('Content-Type: image/jpg');
+	//header('Content-Disposition: attachment; filename=' . $img);
+	//readfile($cachefile);
+
 	// Tidy up
-	imagedestroy($i);
+	if(isset($i)) imagedestroy($i);
 }
 
 // Extracts parameters
