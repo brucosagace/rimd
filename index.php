@@ -21,5 +21,6 @@
 <body>
 	<?php echo $html; ?>
 	<script type="text/javascript" src="js/rimd.js"></script>
+	<script type="text/javascript" src="js/example.js"></script>
 </body>
 </html>

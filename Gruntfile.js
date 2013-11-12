@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		jshint: {
-			all: 'template/js/src/**/*.js',
+			all: '/js/*.js',
 			options: {
 				latedef: 'nofunc',
 				newcap: true,
@@ -14,14 +14,11 @@ module.exports = function(grunt) {
 				onevar: true,
 				browser: true, // window, document etc.
 				devel: true, // alert, console etc.
-				globals: {
-					jQuery: true
-				},
 				'-W099': false // Mixed tabs and spaces
 			}
 		},
 		qunit: {
-			all: ['template/js/test/**/*.html']
+			all: ['/js/tests/**/*.html']
 		},
 		uglify: {
 			options: {
@@ -31,9 +28,9 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: 'template/js/',
-						src: ['*.js', '!*.min.js'],
-						dest: 'template/js/',
+						cwd: '/js/',
+						src: ['rimd.js'],
+						dest: '/js/',
 						ext: '.min.js'
 					}
 				]
@@ -54,7 +51,6 @@ module.exports = function(grunt) {
 	}); 
 
 	// Load the plugins
-	//grunt.loadNpmTasks('grunt-concurrent');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
