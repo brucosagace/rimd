@@ -10,7 +10,7 @@
 			var defaults = {
 				className: 'rimd_img',
 				widths:    ['320', '600', '1024'],
-				path:      'resize.php/{path}/{src}?width={width}'
+				path:      '?width={width}'
 			};
 
 			options = extend(defaults, params);
@@ -28,19 +28,24 @@
 
 		function parseImage(image) {
 			var attr = getImageAttributes(image),
-			    newImage;
+			    newImage, width;
 			
 			if(!attr.src || !attr.src[1]) return;
 			
-			newImage = createNewImage(attr);
+			width = getClosestValues(options.widths, image.offsetWidth);
+
+			newImage = createNewImage(attr, width);
 
 			image.appendChild(newImage);
 		}
 
-		function createNewImage(attr) {
-			var img = document.createElement('img');
+		function createNewImage(attr, width) {
+			var params,
+			    img = document.createElement('img');
 
-			img.src = attr.src[1];
+			console.log(width);
+			params = options.path.replace(/\{width\}/, width);
+			img.src = attr.src[1] + params;
 
 			if(attr.alt && attr.alt[1]) img.alt = attr.alt[1];
 			if(attr.title && attr.title[1]) img.title = attr.title[1];
@@ -95,6 +100,19 @@
 			}
 
 			return destination;
+		}
+
+		function getClosestValues (stack, needle) {
+			var lo, hi, 
+			    i   = 0, 
+			    len = stack.length;
+
+			for (; i < len; i++) {
+				if(stack[i] <= needle && (lo === undefined || lo < stack[i])) lo = stack[i];
+				if(stack[i] >= needle && (hi === undefined ||hi > stack[i])) hi = stack[i];
+			}
+
+			return ((needle - lo) > (hi - needle)) ? hi : lo;
 		}
 
 		return {
