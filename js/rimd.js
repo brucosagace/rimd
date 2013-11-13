@@ -42,12 +42,25 @@
 		function createNewImage(attr, width) {
 			var img = document.createElement('img');
 
-			img.src = options.path.replace(/\{width\}/, width).replace(/\{path\}/, attr.src[1]);
+			attr.width = width;
+			img.src = options.path.replace(/\{width\}|\{path\}/g, function(match, tag, cha){
+				return pathReplace(attr, match, tag, cha);
+			});
 
 			if(attr.alt && attr.alt[1]) img.alt = attr.alt[1];
 			if(attr.title && attr.title[1]) img.title = attr.title[1];
 
 			return img;
+		}
+
+		function pathReplace(attr, match) {
+
+			switch (match) {
+				case '{path}':
+					return attr.src[1];
+				case '{width}':
+					return attr.width;
+			}
 		}
 
 		function getImageAttributes(image) {
