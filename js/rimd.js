@@ -10,7 +10,7 @@
 			var defaults = {
 				className: 'rimd_img',
 				widths:    ['320', '600', '1024'],
-				path:      'resimagecrop.php?image={path}'
+				path:      'resimagecrop.php?image={path}&w={width}'
 			};
 
 			options = extend(defaults, params);
@@ -113,14 +113,14 @@
 		}
 
 		function getClosestValues (stack, needle) {
-			var lo  = -1,
-			    hi  = -1,
+			var lo,
+			    hi,
 			    i   = 0,
 			    len = stack.length;
 
 			for (; i < len; i++) {
-				if(stack[i] <= needle && (lo === -1 || lo < stack[i])) lo = stack[i];
-				if(stack[i] >= needle && (hi === -1 ||hi > stack[i])) hi = stack[i];
+				if(stack[i] <= needle && (lo === undefined || lo < stack[i])) lo = stack[i];
+				if(stack[i] >= needle && (hi === undefined ||hi > stack[i])) hi = stack[i];
 			}
 
 			return ((needle - lo) > (hi - needle)) ? hi : lo;
