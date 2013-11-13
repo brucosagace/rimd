@@ -47,7 +47,16 @@ if ($img) {
 		$origWidth = intval($size[0]);
 		$origHeight = intval($size[1]);
 		// If x, y, w, and h parameters have been passed...
-		if ($x && $y && $w && $h) {
+		if ($w) {
+			$h = $w * ($origHeight / $origWidth);
+			$h = ~~$h; // Round
+
+			$ci = imagecreatetruecolor($w, $h);
+
+			imagecopyresampled($ci, $i, 0, 0, 0, 0, $w, $h, $origWidth, $origHeight);
+
+			$i = $ci;
+		} /*else if ($x && $y && $w && $h) {
 			// Work out the x and y co-ordinates of the original image where the crop is to begin
 			$cx = ($origWidth * $x) / 100;
 			$cy = ($origHeight * $y) / 100;
@@ -56,9 +65,9 @@ if ($img) {
 			// Crop the image
 			imagecopy($ci, $i, 0, 0, $cx, $cy, $origWidth, $origHeight);
 			$i = $ci;
-		}
+		}*/
 		// If scaling is required...
-		if ($sc) {
+		/*if ($sc) {
 			if (!$w) $w = $origWidth;
 			if (!$h) $h = $origHeight;
 			// Define the width and height of the new scaled image
@@ -68,13 +77,13 @@ if ($img) {
 			$sci = imagecreatetruecolor($scw, $sch);
 			imagecopyresampled($sci, isset($ci) ? $ci : $i, 0, 0, 0, 0, $scw, $sch, $w, $h);
 			$i = $sci;
-		}
+		}*/
 		// Create cache file
 		imagejpeg($i, $cachefile);
 	}
 	// Return file
 	header('Content-Type: image/jpg');
-	header('Content-Disposition: attachment; filename=' . $img);
+	//header('Content-Disposition: attachment; filename=' . $img);
 	readfile($cachefile);
 
 	// Tidy up
