@@ -10,7 +10,7 @@
 			var defaults = {
 				className: 'rimd_img',
 				widths:    ['320', '600', '1024'],
-				path:      'resimagecrop.php?image={path}&w={width}'
+				path:      'resimagecrop.php?image={path}'
 			};
 
 			options = extend(defaults, params);

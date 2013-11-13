@@ -73,9 +73,9 @@ if ($img) {
 		imagejpeg($i, $cachefile);
 	}
 	// Return file
-	//header('Content-Type: image/jpg');
-	//header('Content-Disposition: attachment; filename=' . $img);
-	//readfile($cachefile);
+	header('Content-Type: image/jpg');
+	header('Content-Disposition: attachment; filename=' . $img);
+	readfile($cachefile);
 
 	// Tidy up
 	if(isset($i)) imagedestroy($i);
