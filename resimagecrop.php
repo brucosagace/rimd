@@ -81,6 +81,8 @@ if ($img) {
 		// Create cache file
 		imagejpeg($i, $cachefile);
 	}
+
+	// TODO: Set "last update" header for caching
 	// Return file
 	header('Content-Type: image/jpg');
 	//header('Content-Disposition: attachment; filename=' . $img);

@@ -22,7 +22,7 @@
 			var i, images = getElementByClass(options.className);
 
 			for (i in images) {
-				if(images.hasOwnProperty(i)) parseImage(images[i]);
+				if(images.hasOwnProperty(i) && i !== 'length') parseImage(images[i]);
 			}
 		}
 
@@ -31,7 +31,7 @@
 			    newImage, width;
 			
 			if(!attr.src || !attr.src[1]) return;
-			
+
 			width = getClosestValues(options.widths, image.offsetWidth);
 
 			newImage = createNewImage(attr, width);
@@ -70,7 +70,7 @@
 			    altRex   = /<img[^>]+alt="([^">]+)/g,
 			    titleRex = /<img[^>]+title="([^">]+)/g,
 			    result   = {};
-
+			
 			result.src = srcRex.exec(content);
 			result.alt = altRex.exec(content);
 			result.title = titleRex.exec(content);
