@@ -113,17 +113,21 @@
 		}
 
 		function getClosestValues (stack, needle) {
-			var lo,
-			    hi,
+			var lowDiff, diff, result,
 			    i   = 0,
 			    len = stack.length;
 
 			for (; i < len; i++) {
-				if(stack[i] <= needle && (lo === undefined || lo < stack[i])) lo = stack[i];
-				if(stack[i] >= needle && (hi === undefined ||hi > stack[i])) hi = stack[i];
+				diff = stack[i] - needle;
+				// Turn all values positive
+				diff = (diff < 0) ? ~diff : diff;
+				if(lowDiff === undefined || lowDiff > diff) {
+					lowDiff = diff;
+					result = stack[i];
+				}
 			}
 
-			return ((needle - lo) > (hi - needle)) ? hi : lo;
+			return result;
 		}
 
 		return {
