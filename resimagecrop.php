@@ -49,7 +49,7 @@ if ($img) {
 		// If x, y, w, and h parameters have been passed...
 		if ($w) {
 			$h = $w * ($origHeight / $origWidth);
-			$h = ~~$h; // Round
+			$h = ~~$h; // Round down
 
 			$ci = imagecreatetruecolor($w, $h);
 

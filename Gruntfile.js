@@ -58,6 +58,12 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		benchmark: {
+			all: {
+				src: ['js/benchmarks/*.js'],
+				dest: 'js/benchmarks/result.csv'
+			}
+		},
 		watch: {
 			scripts: {
 				files: ['js/*.js', '!js/*.min.js'],
@@ -72,6 +78,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-compass');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-benchmark');
 
 	// Default task(s).
   grunt.registerTask('default', ['jshint', 'qunit', 'uglify', 'compass']);
