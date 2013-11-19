@@ -1,5 +1,5 @@
 <?php
-include 'libs/autoloader.php';
+include 'Pstenstrm/RessImage.php';
 
 use \Pstenstrm\RessImage;
 

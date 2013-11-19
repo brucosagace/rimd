@@ -48,7 +48,6 @@ class RessImage {
 
 		// TODO: Set "last update" header for caching
 		// Return file
-		//header('Content-Disposition: attachment; filename=' . $img);
 		
 		header('Content-Type: image/jpg');
 		readfile($this->cachefile);
@@ -68,13 +67,11 @@ class RessImage {
 		$ci = imagecreatetruecolor($w, $h);
 
 		imagecopyresampled($ci, $i, 0, 0, 0, 0, $w, $h, $origWidth, $origHeight);
-
-		$i = $ci;
 		
 		// Create cache file
-		imagejpeg($i, $this->cachefile);
+		imagejpeg($ci, $this->cachefile);
 		// Tidy up
-		if(isset($i)) imagedestroy($i);
+		imagedestroy($ci);
 	}
 
 	private function getNewJpeg($img) {
