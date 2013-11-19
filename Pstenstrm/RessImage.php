@@ -1,23 +1,10 @@
 <?php
+// Based on
 // resimagecrop - version 0.0.2
-// RESS based solution for cropping images for responsive design
-// Most definitely a work in progress!
-
-// Author - Ian Devlin
+// By Ian Devlin
 // Twitter - @iandevlin
 // Web - iandevlin.com
 
-// $image - the original image
-// $x - the x position to begin the crop from (percentage)
-// $y - the y position to begin the crop from (percentage)
-// $w - the width of the amount to crop (pixels)
-// $h - the height of the amount to crop (pixels)
-// $sc - the scale factor (decimal)
-//
-// For example
-// resimagecrop.php?image=img/image-to-use.jpg&x=15&y=20&w=550&h=450&sc=0.5
-// begins the crop of img/image-to-use.jpg at 15% from the top and 20% from the left and will crop a width of 550x450 and then scale it by 0.5 (resulting image is 275x225)
-//
 namespace Pstenstrm;
 
 class RessImage {

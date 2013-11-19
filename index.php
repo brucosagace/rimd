@@ -1,7 +1,7 @@
 <?php
 	include 'libs/autoloader.php';
 
-	# Get Rimd class
+	# Get modified Markdown
 	use \Pstenstrm\Markdown;
 
 	# Read file and pass content through the Markdown praser
