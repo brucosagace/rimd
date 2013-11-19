@@ -11,7 +11,6 @@ class RessImage {
 	private $cachefile;
 
 	public function __construct($img, $x, $y, $w, $h, $sc) {
-		
 		if ($img) {
 			// Do a little prep to find the filename of the resized and scaled file, so we can test if it's cached
 			$w ? $width = '-' . $w : $width = '';
@@ -24,18 +23,27 @@ class RessImage {
 			// Define the cachefile
 			$this->cachefile = 'temp/' . basename($img, '.' . $pi['extension']) . $width . $height . $xcrop . $ycrop . $scale . '.' . $pi['extension'];
 
-			if (!file_exists($this->cachefile)) {
+			if(file_exists($this->cachefile) && $this->validateHeaders()) {
+				
+				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachhefile)).' GMT', true, 304);
+				exit;
+			} else if(file_exists($this->cachefile)) {
+				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachhefile)).' GMT', true, 200);
+			} else if (!file_exists($this->cachefile)) {
 				if($w) {
 					$this->scaleJpegByWidth($img, $w);
 				}
-			} else {
-				if(!$this->isJpeg($this->cachefile)) $this->headerNotFound();
-			}
-		}
+			} else if(!$this->isJpeg($this->cachefile)) $this->headerNotFound();
+		} else $this->headerNotFound();
 
 		// TODO: Set "last update" header for caching
 		// Return file
-		
+		//
+		/*
+		echo "<pre>";
+    print_r(apache_request_headers());
+    die('</pre>');
+		*/
 		header('Content-Type: image/jpg');
 		readfile($this->cachefile);
 	}
@@ -77,6 +85,13 @@ class RessImage {
 	private function headerNotFound() {
 		header("HTTP/1.0 404 Not Found");
 		exit;
+	}
+
+	private function validateHeaders() {
+		// Getting headers sent by the client.
+    $headers = apache_request_headers();
+
+    return isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($this->cachefile));
 	}
 
 	public function __destruct() {}
