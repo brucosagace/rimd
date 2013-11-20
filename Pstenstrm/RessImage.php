@@ -25,10 +25,10 @@ class RessImage {
 
 			if(file_exists($this->cachefile) && $this->validateHeaders()) {
 				
-				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachhefile)).' GMT', true, 304);
+				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachefile)).' GMT', true, 304);
 				exit;
 			} else if(file_exists($this->cachefile)) {
-				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachhefile)).' GMT', true, 200);
+				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachefile)).' GMT', true, 200);
 			} else if (!file_exists($this->cachefile)) {
 				if($w) {
 					$this->scaleJpegByWidth($img, $w);
@@ -39,8 +39,8 @@ class RessImage {
 		// TODO: Set "last update" header for caching
 		// Return file
 		//
-		/*
-		echo "<pre>";
+		
+		/*echo "<pre>";
     print_r(apache_request_headers());
     die('</pre>');
 		*/

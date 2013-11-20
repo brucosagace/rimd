@@ -1,7 +1,7 @@
 var DEBUG = true;
 
 (function(){
-	var rimd, $wrapper, $rimd;
+	var rimd, $rimd;
 
 	module('Load image', {
 		setup: function () {
@@ -9,8 +9,7 @@ var DEBUG = true;
 				className: '.rimd',
 				path: '/rimd/resimagecrop.php?image={path}&w={width}'
 			});
-			$wrapper = $('#loadImage');
-			$rimd = $wrapper.find('.rimd');
+			$rimd = $('#loadImage').find('.rimd');
 		}
 	});
 
