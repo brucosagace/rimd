@@ -12,8 +12,6 @@ class RessImage {
 
 	public function __construct($img, $x, $y, $w, $h, $sc) {
 		date_default_timezone_set('GMT');
-		session_cache_limiter('public');
-		session_start();
 
 		if ($img) {
 			// Do a little prep to find the filename of the resized and scaled file, so we can test if it's cached
@@ -24,17 +22,21 @@ class RessImage {
 			$sc ? $scale = '-' . $sc : $scale = '';
 			$pi = pathinfo($img);
 
-			if($pi['extension'] !== 'jpg') $this->headerNotFound();
-
-			// Define the cachefile
+			// Define the cachefile name
 			$this->cachefile = 'temp/' . basename($img, '.' . $pi['extension']) . $width . $height . $xcrop . $ycrop . $scale . '.' . $pi['extension'];
 
-			if(file_exists($this->cachefile) && $this->validateHeaders()) {
+			// Only accept jpg files
+			$validMimeType = false;
+			if(file_exists($this->cachefile)) {
+				$validMimeType = ($this->getMimeType($this->cachefile) === 'image/jpeg');
+			}
+
+			if($validMimeType && $this->validateHeaders()) {
 				
-				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachefile)).' GMT', true, 304);
+				// Browser cached file
+				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($this->cachefile)) . ' GMT', true, 304);
 				exit;
-			} else if(file_exists($this->cachefile)) {
-				header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachefile)).' GMT', true, 200);
+
 			} else if (!file_exists($this->cachefile)) {
 				if($w) {
 					$this->scaleJpegByWidth($img, $w);
@@ -42,15 +44,15 @@ class RessImage {
 			}
 		} else $this->headerNotFound();
 
-		// TODO: Set "last update" header for caching
-		// Return file
-		//
 		/*echo '<pre>';
 		print_r(session_cache_limiter());
 		echo "</pre><pre>";
     print_r(apache_request_headers());
     die('</pre>');*/
-		
+
+    // Return file
+    session_cache_limiter('public');
+		header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->cachefile)).' GMT', true, 200);
 		header('Content-Type: image/jpg');
 		readfile($this->cachefile);
 	}
@@ -77,7 +79,7 @@ class RessImage {
 	}
 
 	private function getNewJpeg($img) {
-		if(!file_exists($img)) $this->headerNotFound();
+		if(!file_exists($img) || $this->getMimeType($img) !== 'image/jpeg') $this->headerNotFound();
 
 		// Get a handle to the original image
 		return imagecreatefromjpeg($img);  
@@ -93,6 +95,14 @@ class RessImage {
     $headers = apache_request_headers();
 
     return isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($this->cachefile));
+	}
+
+	private function getMimeType($filename) {
+		$finfo = new \finfo(FILEINFO_MIME_TYPE);
+		$fileContents = file_get_contents($filename);
+		$mimeType = $finfo->buffer($fileContents);
+
+		return $mimeType;
 	}
 
 	public function __destruct() {}

@@ -15,6 +15,6 @@ $ri = new RessImage($img, $x, $y, $w, $h, $sc);
 
 // Extracts parameters
 function getParam($name) {
-	if (isset($_GET[$name])) return htmlspecialchars($_GET[$name]);
+	if (isset($_GET[$name])) return htmlspecialchars($_GET[$name], ENT_QUOTES, 'UTF-8');
 	return '';
 }
