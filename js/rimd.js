@@ -135,14 +135,14 @@
 		// UglifyJS will discard any code within an if (DEBUG) clause
 		if (DEBUG) {
 			test = {
-				// Expose private methods to qUnit
+				// Expose private methods to QUnit
 				'getClosestValues': getClosestValues
 			};
 		}
 
 		return {
 			options: options,
-			q: test
+			t: test
 		};
 	};
 

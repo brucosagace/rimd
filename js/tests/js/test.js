@@ -26,12 +26,12 @@ var DEBUG = true;
 			rimd = new Rimd({
 				className: 'rimd2',
 				path: '/rimd/resimagecrop.php?image={path}&w={width}',
-				widths: [500]
+				widths: [-450, 300, 500, 505]
 			});
 		}
 	});
 
 	test('getClosestValues', function(){
-		equal(rimd.q.getClosestValues(rimd.options.widths, 123), 500);
+		equal(rimd.t.getClosestValues(rimd.options.widths, 435), 500);
 	});
 })();
