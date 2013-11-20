@@ -25,18 +25,14 @@ class RessImage {
 			// Define the cachefile name
 			$this->cachefile = 'temp/' . basename($img, '.' . $pi['extension']) . $width . $height . $xcrop . $ycrop . $scale . '.' . $pi['extension'];
 
-			// Only accept jpg files
-			$validMimeType = false;
-			if(file_exists($this->cachefile)) {
-				$validMimeType = ($this->getMimeType($this->cachefile) === 'image/jpeg');
-			}
-
-			if($validMimeType && $this->validateHeaders()) {
-				
+			if($this->validateHeaders()) {
 				// Browser cached file
 				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($this->cachefile)) . ' GMT', true, 304);
 				exit;
 
+			} else if (file_exists($this->cachefile) && $this->getMimeType($this->cachefile) !== 'image/jpeg') {
+				// Only accept jpg files
+				$this->headerNotFound();
 			} else if (!file_exists($this->cachefile)) {
 				if($w) {
 					$this->scaleJpegByWidth($img, $w);
