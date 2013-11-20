@@ -15,7 +15,8 @@ module.exports = function(grunt) {
 				onevar: true,
 				browser: true, // window, document etc.
 				globals: {
-					Rimd: true
+					Rimd: true,
+					DEBUG: true
 				},
 				devel: true, // alert, console etc.
 				'-W099': false // Mixed tabs and spaces

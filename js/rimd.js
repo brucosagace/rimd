@@ -136,8 +136,8 @@
 				// Expose private methods to qUnit
 				return {
 
-				}
-			}
+				};
+			};
 		}
 
 		return {
