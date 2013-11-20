@@ -1,11 +1,14 @@
+var DEBUG = true;
+
 (function(){
 	"use strict";
 
-	var options = {
+	if(DEBUG) {
+		var options = {
 
-	    },
-	    rimd;
+		    },
+		    rimd;
 
-	rimd = new Rimd(options);
-
+		rimd = new Rimd(options);
+	}
 })();
