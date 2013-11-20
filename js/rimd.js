@@ -130,6 +130,16 @@
 			return result;
 		}
 
+		// UglifyJS will discard any code within an if (DEBUG) clause
+		if (DEBUG) {
+			this.test = function () {
+				// Expose private methods to qUnit
+				return {
+
+				}
+			}
+		}
+
 		return {
 			options: options
 		};

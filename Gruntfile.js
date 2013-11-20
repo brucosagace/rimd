@@ -26,7 +26,13 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
-				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+				compress: {
+					dead_code: true,
+					global_defs: {
+						'DEBUG': false
+					}
+				}
 			},
 			build: {
 				files: [
