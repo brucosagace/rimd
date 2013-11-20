@@ -11,6 +11,10 @@ class RessImage {
 	private $cachefile;
 
 	public function __construct($img, $x, $y, $w, $h, $sc) {
+		date_default_timezone_set('GMT');
+		session_cache_limiter('public');
+		session_start();
+
 		if ($img) {
 			// Do a little prep to find the filename of the resized and scaled file, so we can test if it's cached
 			$w ? $width = '-' . $w : $width = '';
@@ -19,6 +23,8 @@ class RessImage {
 			$y ? $ycrop = 'x' . $y : $ycrop = '';
 			$sc ? $scale = '-' . $sc : $scale = '';
 			$pi = pathinfo($img);
+
+			if($pi['extension'] !== 'jpg') $this->headerNotFound();
 
 			// Define the cachefile
 			$this->cachefile = 'temp/' . basename($img, '.' . $pi['extension']) . $width . $height . $xcrop . $ycrop . $scale . '.' . $pi['extension'];
@@ -33,17 +39,18 @@ class RessImage {
 				if($w) {
 					$this->scaleJpegByWidth($img, $w);
 				}
-			} else if(!$this->isJpeg($this->cachefile)) $this->headerNotFound();
+			}
 		} else $this->headerNotFound();
 
 		// TODO: Set "last update" header for caching
 		// Return file
 		//
-		
-		/*echo "<pre>";
+		/*echo '<pre>';
+		print_r(session_cache_limiter());
+		echo "</pre><pre>";
     print_r(apache_request_headers());
-    die('</pre>');
-		*/
+    die('</pre>');*/
+		
 		header('Content-Type: image/jpg');
 		readfile($this->cachefile);
 	}
@@ -70,16 +77,10 @@ class RessImage {
 	}
 
 	private function getNewJpeg($img) {
-		if(!file_exists($img) && !$this->isJpeg($img)) $this->headerNotFound();
+		if(!file_exists($img)) $this->headerNotFound();
 
 		// Get a handle to the original image
 		return imagecreatefromjpeg($img);  
-	}
-
-	private function isJpeg($img) {
-		$ext = pathinfo($img, PATHINFO_EXTENSION);
-
-		return ($ext == 'jpg');
 	}
 
 	private function headerNotFound() {
