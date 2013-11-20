@@ -81,6 +81,8 @@
 		function getElementByClass(selector) {
 			var result = [];
 
+			selector = selector.replace(/[.]/, '');
+
 			if(document.querySelectorAll) {
 				result = document.querySelectorAll('.' + selector);
 			} else {
