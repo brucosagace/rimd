@@ -2,7 +2,7 @@
 	"use strict";
 
 	var Rimd = function(params){
-		var options = {};
+		var test, options = {};
 
 		init(params);
 
@@ -134,16 +134,15 @@
 
 		// UglifyJS will discard any code within an if (DEBUG) clause
 		if (DEBUG) {
-			this.test = function () {
+			test = {
 				// Expose private methods to qUnit
-				return {
-
-				};
+				'getClosestValues': getClosestValues
 			};
 		}
 
 		return {
-			options: options
+			options: options,
+			q: test
 		};
 	};
 
