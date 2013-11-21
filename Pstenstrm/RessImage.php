@@ -23,6 +23,7 @@ class RessImage {
 			$pi = pathinfo($img);
 
 			// Define the cachefile name
+			// TODO: fileinode
 			$this->cachefile = 'temp/' . basename($img, '.' . $pi['extension']) . $width . $height . $xcrop . $ycrop . $scale . '.' . $pi['extension'];
 
 			if($this->validateHeaders()) {
@@ -94,11 +95,9 @@ class RessImage {
 	}
 
 	private function getMimeType($filename) {
-		$finfo = new \finfo(FILEINFO_MIME_TYPE);
-		$fileContents = file_get_contents($filename);
-		$mimeType = $finfo->buffer($fileContents);
+		$size = getimagesize($filename);
 
-		return $mimeType;
+		return $size['mime'];
 	}
 
 	public function __destruct() {}
