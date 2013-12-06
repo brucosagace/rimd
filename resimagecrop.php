@@ -10,8 +10,9 @@ $y = intval(getParam('y'));
 $w = intval(getParam('w'));
 $h = intval(getParam('h'));
 $sc = getParam('sc');
+$dpi = getParam('dpi');
 
-$ri = new RessImage($img, $x, $y, $w, $h, $sc);
+$ri = new RessImage($img, $x, $y, $w, $h, $sc, $dpi);
 
 // Extracts parameters
 function getParam($name) {

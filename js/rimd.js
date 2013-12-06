@@ -10,7 +10,7 @@
 			var defaults = {
 				className: 'rimd_img',
 				widths:    ['320', '600', '1024'],
-				path:      'resimagecrop.php?image={path}&w={width}'
+				path:      'resimagecrop.php?image={path}&w={width}&dpi={dpi}'
 			};
 
 			options = extend(defaults, params);
@@ -20,6 +20,15 @@
 
 		function doImages() {
 			var i, images = getElementByClass(options.className);
+
+			// Batch width checks to minimize the impact of forced reflow
+			options.windowWidth = window.innerWidth;
+			for (i in images) {
+				if(images.hasOwnProperty(i) && i !== 'length')
+					images[i].tmpWidth = images[i].offsetWidth;
+			}
+
+			i = null;
 
 			for (i in images) {
 				if(images.hasOwnProperty(i) && i !== 'length') parseImage(images[i]);
@@ -32,18 +41,17 @@
 			
 			if(!attr.src || !attr.src[1]) return;
 
-			width = getClosestValues(options.widths, image.offsetWidth);
+			attr.offsetWidth = image.tmpWidth;
 
-			newImage = createNewImage(attr, width);
+			newImage = createNewImage(attr);
 
 			image.appendChild(newImage);
 		}
 
-		function createNewImage(attr, width) {
+		function createNewImage(attr) {
 			var img = document.createElement('img');
 
-			attr.width = width;
-			img.src = options.path.replace(/\{width\}|\{path\}/g, function(match, tag, cha){
+			img.src = options.path.replace(/\{width\}|\{path\}|\{dpi\}/g, function(match, tag, cha){
 				return pathReplace(attr, match, tag, cha);
 			});
 
@@ -59,7 +67,9 @@
 				case '{path}':
 					return attr.src[1];
 				case '{width}':
-					return attr.width;
+					return getClosestValues(options.widths, attr.offsetWidth);
+				case '{dpi}':
+					return getDpi();
 			}
 		}
 
@@ -130,6 +140,10 @@
 			}
 
 			return result;
+		}
+
+		function getDpi() {
+			
 		}
 
 		// UglifyJS will discard any code within an if (DEBUG) clause
