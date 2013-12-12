@@ -14,72 +14,11 @@ Bild på Pirru
 Introduction
 ------------
 
-This is a library package that includes the PHP Markdown parser and its 
-sibling PHP Markdown Extra which additional features.
-
-Markdown is a text-to-HTML conversion tool for web writers. Markdown
-allows you to write using an easy-to-read, easy-to-write plain text
-format, then convert it to structurally valid XHTML (or HTML).
-
-"Markdown" is two things: a plain text markup syntax, and a software 
-tool, written in Perl, that converts the plain text markup to HTML. 
 PHP Markdown is a port to PHP of the original Markdown program by 
 John Gruber.
 
 Full documentation of Markdown's syntax is available on John's 
 Markdown page: <http://daringfireball.net/projects/markdown/>
-
-
-Requirement
------------
-
-This library package requires PHP 5.3 or later.
-
-This library requires but does not include PHP Markdown Lib 1.3 by Michel Fortin. 
-
-
-Usage
------
-
-This library package is meant to be used with class autoloading. For autoloading 
-to work, your project needs have setup a PSR-0-compatible autoloader. See the 
-included Readme.php file for a minimal autoloader setup. (If you don't want to 
-use autoloading you can do a classic `require_once` to manually include the 
-files prior use instead.)
-
-With class autoloading in place, putting the 'Michelf' folder in your 
-include path should be enough for this to work:
-
-	use \Michelf\Markdown;
-	$my_html = Markdown::defaultTransform($my_text);
-
-Markdown Extra syntax is also available the same way:
-
-	use \Michelf\MarkdownExtra;
-	$my_html = MarkdownExtra::defaultTransform($my_text);
-
-If you wish to use PHP Markdown with another text filter function 
-built to parse HTML, you should filter the text *after* the `transform`
-function call. This is an example with [PHP SmartyPants][psp]:
-
-	use \Michelf\Markdown, \Michelf\SmartyPants;
-	$my_html = Markdown::defaultTransform($my_text);
-	$my_html = SmartyPants::defaultTransform($my_html);
-
-All these examples are using the static `defaultTransform` static function 
-found inside the parser class. If you want to customize the parser 
-configuration, you can also instantiate it directly and change some 
-configuration variables:
-
-	use \Michelf\MarkdownExtra;
-	$parser = new MarkdownExtra;
-	$parser->fn_id_prefix = "post22-";
-	$my_html = $parser->transform($my_text);
-
-To learn more, see the full list of [configuration variables].
-
- [configuration variables]: http://michelf.ca/projects/php-markdown/configuration/
-
 
 Copyright and License
 ---------------------
