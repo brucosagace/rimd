@@ -10,7 +10,7 @@ namespace Pstenstrm;
 class RessImage {
 	private $cachefile;
 
-	public function __construct($img, $x, $y, $w, $h, $sc) {
+	public function __construct($img, $x, $y, $w, $h, $sc, $r) {
 		date_default_timezone_set('GMT');
 
 		if ($img) {
@@ -20,32 +20,42 @@ class RessImage {
 			$x ? $xcrop = '-' . $x : $xcrop = '';
 			$y ? $ycrop = 'x' . $y : $ycrop = '';
 			$sc ? $scale = '-' . $sc : $scale = '';
+			$r ? $retina = '-r' : $retina = '';
 			$pi = pathinfo($img);
 
 			// Define the cachefile name
 			// TODO: fileinode
-			$this->cachefile = 'temp/' . basename($img, '.' . $pi['extension']) . $width . $height . $xcrop . $ycrop . $scale . '.' . $pi['extension'];
+			$this->cachefile = 'temp/' . basename($img, '.' . $pi['extension']) . $width . $height . $xcrop . $ycrop . $scale . $retina . '.' . $pi['extension'];
 
-			if($this->validateHeaders()) {
+			$fileExists = file_exists($this->cachefile);
+
+			if($fileExists && $this->validateHeaders()) {
 				// Browser cached file
 				header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($this->cachefile)) . ' GMT', true, 304);
 				exit;
 
-			} else if (file_exists($this->cachefile) && $this->getMimeType($this->cachefile) !== 'image/jpeg') {
+			} else if ($fileExists && $this->getMimeType($this->cachefile) !== 'image/jpeg') {
 				// Only accept jpg files
 				$this->headerNotFound();
-			} else if (!file_exists($this->cachefile)) {
+			} else if (!$fileExists) {
+				$i = $this->getNewJpeg($img);
+				$quality = 75;
+
 				if($w) {
-					$this->scaleJpegByWidth($img, $w);
+					$i = $this->scaleJpegByWidth($i, $img, $w);
 				}
+
+				if($r) {
+					$i = $this->retinaImage($i, $img, $r);
+					$quality = 30;
+				}
+
+				// Create cache file
+				imagejpeg($i, $this->cachefile, $quality);
+				// Tidy up
+				imagedestroy($i);
 			}
 		} else $this->headerNotFound();
-
-		/*echo '<pre>';
-		print_r(session_cache_limiter());
-		echo "</pre><pre>";
-    print_r(apache_request_headers());
-    die('</pre>');*/
 
     // Return file
     session_cache_limiter('public');
@@ -54,8 +64,7 @@ class RessImage {
 		readfile($this->cachefile);
 	}
 
-	private function scaleJpegByWidth($img, $w) {
-		$i = $this->getNewJpeg($img);      
+	private function scaleJpegByWidth($i, $img, $w) {   
 		// Get the dimensions of the original image
 		$size = getimagesize($img);
 		$origWidth = intval($size[0]);
@@ -68,11 +77,22 @@ class RessImage {
 		$ci = imagecreatetruecolor($w, $h);
 
 		imagecopyresampled($ci, $i, 0, 0, 0, 0, $w, $h, $origWidth, $origHeight);
-		
-		// Create cache file
-		imagejpeg($ci, $this->cachefile);
-		// Tidy up
-		imagedestroy($ci);
+
+		return $ci;
+	}
+
+	private function retinaImage($i, $img, $r) {
+
+		$w = imagesx($i);
+		$h = imagesy($i);
+
+		$sw = $w * 2;
+		$sh = $h * 2;
+		$ci = imagecreatetruecolor($sw, $sh);
+
+		imagecopyresampled($ci, $i, 0, 0, 0, 0, $sw, $sh, $w, $h);
+
+		return $ci;
 	}
 
 	private function getNewJpeg($img) {

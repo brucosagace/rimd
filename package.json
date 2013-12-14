@@ -1,6 +1,6 @@
 {
   "name": "Rimd",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Markdown responsive images",
   "main": "index.php",
   "dependencies": {},

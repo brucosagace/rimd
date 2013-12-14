@@ -1,7 +1,7 @@
 PHP Rimd
 ============
 
-PHP Rimd Lib 0.0.4 - 12 Nov 2013
+PHP Rimd Lib 0.0.5 - 12 Nov 2013
 
 extens PHP Markdown Lib 1.3 - 11 Apr 2013  
 by Michel Fortin  
