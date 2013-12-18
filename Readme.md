@@ -47,13 +47,13 @@ Usage
 			<td>path</td>
 			<td>url template</td>
 			<td>resimagecrop.php?image={path}&w={width}&r={retina}</td>
-			<td>Image path. How to format the ```<img>``` src attribute</td>
+			<td>Image path. How to format the `<img>` src attribute</td>
 		</tr>
 		<tr>
 			<td>widths</td>
 			<td>Array(int, int, int)</td>
 			<td>[320, 600, 1024]</td>
-			<td>Image widths. The closest value to the images parent elements width will be set as ```{width}```. More values will result in more images cached on the server.</th>
+			<td>Image widths. The closest value to the images parent elements width will be set as `{width}`. More values will result in more images cached on the server.</th>
 		</tr>
 		<tr>
 			<td>retina</td>
@@ -62,7 +62,7 @@ Usage
 				1 for retina devices
 				0 for non-retina devices
 			</td>
-			<td>Load retina image. This value will be set as ```{retina}```. Set this value to force retina/non-retina images for all devices. This will halve the amount of images that needs to be cached.</td>
+			<td>Load retina image. This value will be set as `{retina}`. Set this value to force retina/non-retina images for all devices. This will halve the amount of images that needs to be cached.</td>
 		</tr>
 	</tbody>
 </table>
