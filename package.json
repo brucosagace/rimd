@@ -15,8 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://pstenstrm@bitbucket.org/pstenstrm/rimd.git"
+    "url": "git@github.com:Vinnovera/rimd.git"
   },
-  "author": "Per Stenström",
-  "license": "BSD-2-Clause"
+  "author": "Per Stenström"
 }

@@ -17,31 +17,52 @@ Introduction
 PHP Markdown is a port to PHP of the original Markdown program by 
 John Gruber.
 
+This is an extension of that library to allow for responsive iamges. It uses the standard Markdown syntax for images.
+
 Full documentation of Markdown's syntax is available on John's 
 Markdown page: <http://daringfireball.net/projects/markdown/>
 
-Copyright and License
----------------------
+Usage
+-----
 
-Copyright (c) 2013 Per Stenström  
-All rights reserved.
+### Options
 
-Extends PHP Markdown Lib  
-Copyright (c) 2004-2013 Michel Fortin  
-http://michelf.ca/  
-All rights reserved.
-
-Based on Markdown  
-Copyright (c) 2003-2005 John Gruber  
-http://daringfireball.net/  
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-3. Neither the name "Markdown" nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+<table>
+	<thead>
+		<tr>
+			<th>Setting</th>
+			<th>Values</th>
+			<th>Default</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>className</td>
+			<td>string</td>
+			<td>rimd_img</td>
+			<td>Image class. The class name of the Rimd image wrapper.</td>
+		</tr>
+		<tr>
+			<td>path</td>
+			<td>url template</td>
+			<td>resimagecrop.php?image={path}&w={width}&r={retina}</td>
+			<td>Image path. How to format the `<img>` src attribute</td>
+		</tr>
+		<tr>
+			<td>widths</td>
+			<td>Array(int, int, int)</td>
+			<td>[320, 600, 1024]</td>
+			<td>Image widths. The closest value to the images parent elements width will be set as `{width}`. More values will result in more images cached on the server.</th>
+		</tr>
+		<tr>
+			<td>retina</td>
+			<td>boolean</td>
+			<td>
+				1 for retina devices
+				0 for non-retina devices
+			</td>
+			<td>Load retina image. This value will be set as `{retina}`. Set this value to force retina/non-retina images for all devices. This will halve the amount of images that needs to be cached.</td>
+		</tr>
+	</tbody>
+</table>
