@@ -79,9 +79,9 @@
 		function getImageAttributes(image) {
 			var noscript = image.children[0],
 			    content  = noscript.textContent || noscript.innerHTML,
-			    srcRex   = /<img[^>]+src="([^">]+)/g,
-			    altRex   = /<img[^>]+alt="([^">]+)/g,
-			    titleRex = /<img[^>]+title="([^">]+)/g,
+			    srcRex   = /src="([^"]+)/g,
+			    altRex   = /alt="([^"]+)/g,
+			    titleRex = /title="([^"]+)/g,
 			    result   = {},
 			    src, alt, title;
 
