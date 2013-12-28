@@ -24,7 +24,6 @@
 			    images = getElementByClass(options.className);
 
 			// Batch width checks to minimize the impact of forced reflow
-			console.log(options.windowWidth);
 			for (i in images) {
 				if(images.hasOwnProperty(i) && i !== 'length') {
 					widths[i] = images[i].offsetWidth;
@@ -60,17 +59,16 @@
 				return pathReplace(attr, match, tag, cha);
 			});
 
-			if(attr.alt && attr.alt[1]) img.alt = attr.alt[1];
-			if(attr.title && attr.title[1]) img.title = attr.title[1];
+			if(attr.alt) img.alt = attr.alt;
+			if(attr.title) img.title = attr.title;
 
 			return img;
     }
 
     function pathReplace(attr, match) {
-
 			switch (match) {
 				case '{path}':
-					return attr.src[1];
+					return attr.src;
 				case '{width}':
 					return getClosestValues(options.widths, attr.offsetWidth);
 				case '{retina}':
@@ -84,11 +82,16 @@
 			    srcRex   = /<img[^>]+src="([^">]+)/g,
 			    altRex   = /<img[^>]+alt="([^">]+)/g,
 			    titleRex = /<img[^>]+title="([^">]+)/g,
-			    result   = {};
-      
-			result.src = srcRex.exec(content);
-			result.alt = altRex.exec(content);
-			result.title = titleRex.exec(content);
+			    result   = {},
+			    src, alt, title;
+
+			src = srcRex.exec(content);
+			alt = altRex.exec(content);
+			title = titleRex.exec(content);
+
+			if(src && src[1]) result.src = src[1];
+			if(alt && alt[1]) result.alt = alt[1];
+			if(title && title[1]) result.title = title[1];
 
 			return result;
 		}
@@ -151,7 +154,10 @@
 		if (DEBUG) {
 			test = {
 				// Expose private methods to QUnit
-				'getClosestValues': getClosestValues
+				'getClosestValues': getClosestValues,
+				'extend': extend,
+				'legacyGetElementByClass': legacyGetElementByClass,
+				'getImageAttributes': getImageAttributes
 			};
 		}
 
