@@ -33,7 +33,8 @@ module.exports = function(grunt) {
 					global_defs: {
 						'DEBUG': false
 					}
-				}
+				},
+				report: 'gzip'
 			},
 			build: {
 				files: [
@@ -54,7 +55,7 @@ module.exports = function(grunt) {
 					clean: true
 				}
 			},
-			dist: {
+			prod: {
 				options: {
 					config: 'config_prod.rb'
 				}

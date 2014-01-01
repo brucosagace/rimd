@@ -69,7 +69,6 @@ var DEBUG = true;
 		}
 	});
 
-
 	test('getImageAttributes', function(){
 		var elem = rimd.t.legacyGetElementByClass('getImageAttributes');
 
