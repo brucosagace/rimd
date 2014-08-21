@@ -2,14 +2,15 @@
  * 
  */
 
-(function(){
-	var
-		win = window;
-		doc = document;
-
+(function() {
 	"use strict";
 
-	var Rimd = function(params) {
+	var
+		win = window,
+		doc = document,
+		Rimd;
+
+	Rimd = function(params) {
 		var 
 			options = {},
 			defaults = {
@@ -28,7 +29,6 @@
 
 		function doImages() {
 			var 
-				paths = [],
 				images = getElementByClass(options.className),
 				attr = getImageAttributes(images),
 				resizeHandler, i;
@@ -205,14 +205,14 @@
 			var 
 				last, deferTimer;
 
-			threshhold || (threshhold = 17); // ~ 1000 / 60
+			threshhold = threshhold || 17; // ~ 1000 / 60
 
 			return function() {
 				var
-					now = +new Date,
+					now = new Date(),
 					args = arguments;
 
-				context || (context = this);
+				context = context || this;
 
 				if (last && now < last + threshhold) {
 					// hold on to it

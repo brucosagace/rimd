@@ -4,10 +4,12 @@ var DEBUG = true;
 	"use strict";
 
 	if(DEBUG) {
-		var options = {
-
-		    },
-		    rimd;
+		var 
+			options = {
+				path: 'resimagecrop.php?image={path}&w={width}',
+				reloadOnResize: true
+			},
+			rimd;
 
 		rimd = new Rimd(options);
 	}

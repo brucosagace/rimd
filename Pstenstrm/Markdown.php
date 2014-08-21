@@ -45,7 +45,7 @@ class Markdown extends \Michelf\Markdown {
 		$result = "<i class=\"$this->rimd_class\"";
 		$result .= " style=\"padding-bottom:$padding%;\"";
 		$result .= ">";
-		$result .= "<noscript>";
+		$result .= "<noscript data-src=" . $url . ">";
 
 		return $result;
 	}
