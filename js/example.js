@@ -7,7 +7,8 @@ var DEBUG = true;
 		var 
 			options = {
 				path: 'resimagecrop.php?image={path}&w={width}',
-				reloadOnResize: true
+				reloadOnResize: true,
+				lazyload: true
 			},
 			rimd;
 

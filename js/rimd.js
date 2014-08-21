@@ -8,7 +8,71 @@
 	var
 		win = window,
 		doc = document,
-		Rimd;
+		Rimd,
+		Img;
+
+	Img = function(elem, attr, lazyload) {
+		var
+			scrollHandler = throttle(function() {
+				if(isElementInViewport(elem)) {
+					elem.appendChild(img);
+
+					removeListeners();
+				}
+			}),
+			resizeHandler = throttle(function() {
+				elem.dataset.top = elem.getBoundingClientRect().top;
+				scrollHandler();
+			}),
+			img;
+
+		updateImage(attr);
+
+		function updateImage(attr) {
+			if(!attr.path) return;
+
+			if(img && img.parentNode) {
+				img.parentNode.removeChild(img);
+			}
+
+			img = doc.createElement('img');
+
+			img.src = attr.path;
+			if(attr.alt) img.alt = attr.alt;
+			if(attr.title) img.title = attr.title;
+
+			if(!lazyload || isElementInViewport(elem)) {
+				elem.appendChild(img);
+			} else {
+				removeListeners();
+				win.addEventListener('scroll', scrollHandler); 
+				win.addEventListener('resize', resizeHandler);
+			}
+		}
+
+		function isElementInViewport(el) {
+			var 
+				top = el.dataset.top || el.getBoundingClientRect().top,
+				docEl = doc.documentElement,
+				isInViewport = top <= (win.pageYOffset || docEl.scrollTop)  - (docEl.clientTop || 0) + (win.innerHeight || docEl.clientHeight);
+
+			if(!isInViewport && !el.dataset.top) {
+				el.dataset.top = top;
+			}
+
+			return isInViewport;
+		}
+
+		function removeListeners() {
+			win.removeEventListener('scroll', scrollHandler);
+			win.removeEventListener('resize', resizeHandler);
+		}
+
+		return {
+			'removeListeners': removeListeners,
+			'updateImage': updateImage
+		};
+	};
 
 	Rimd = function(params) {
 		var 
@@ -21,96 +85,38 @@
 				reloadOnResize: false,
 				lazyload:       false
 			},
-			test;
+			images = [],
+			test, elems, attr, resizeHandler, i;
 
 		options = extend(defaults, params);
 
-		doImages();
+		elems = getElementByClass(options.className),
+		attr = getImageAttributes(elems);
 
-		function doImages() {
-			var 
-				images = getElementByClass(options.className),
-				attr = getImageAttributes(images),
-				resizeHandler, i;
-
-			for (i in images) {
-				if(images.hasOwnProperty(i) && i !== 'length') {
-					parseImage(images[i], attr[i]);
-				}
+		for (i in elems) {
+			if(elems.hasOwnProperty(i) && i !== 'length') {
+				images.push(new Img(elems[i], attr[i], options.lazyload));
 			}
+		}
 
-			if(options.reloadOnResize) {
-				resizeHandler = throttle(function () {
-					var
-						newAttr = getImageAttributes(images),
-						i;
+		if(options.reloadOnResize) {
+			resizeHandler = throttle(function () {
+				var
+					newAttr = getImageAttributes(elems),
+					i;
 
-					for (i in images) {
-						if(images.hasOwnProperty(i) && i !== 'length') {
-							if(attr[i].path !== getImagePath(newAttr[i])) {
-								parseImage(images[i], newAttr[i]);
-							}
+				for (i in elems) {
+					if(elems.hasOwnProperty(i) && i !== 'length') {
+						if(attr[i].path !== getImagePath(newAttr[i])) {
+							images[i].updateImage(newAttr[i]);
 						}
 					}
+				}
 
-					attr = newAttr;
-				});
+				attr = newAttr;
+			});
 
-				win.addEventListener('resize', resizeHandler);
-			}
-		}
-
-		
-
-		function parseImage(image, attr) {
-			var 
-				img = image.getElementsByTagName('img'),
-				newImage;
-
-			if(!attr.src || !attr.src[1]) return;
-
-			if(img.length) {
-				img[0].parentNode.removeChild(img[0]);
-			}
-
-			newImage = createNewImage(attr);
-
-			if(!options.lazyload || isElementInViewport(image)) {
-				image.appendChild(newImage);
-			} else {
-				lazyloadImage(image, newImage);
-			}
-		}
-
-		function lazyloadImage (image, newImage) {
-			var
-				scrollHandler = throttle(function() {
-					if(isElementInViewport(image)) {
-						image.appendChild(newImage);
-
-						win.removeEventListener('scroll', scrollHandler);
-						win.removeEventListener('resize', resizeHandler);
-					}
-				}),
-				resizeHandler = throttle(function() {
-					image.dataset.top = image.getBoundingClientRect().top;
-					scrollHandler();
-				});
-
-			win.addEventListener('scroll', scrollHandler); 
 			win.addEventListener('resize', resizeHandler);
-		}
-
-		function createNewImage(attr) {
-			var 
-				img = doc.createElement('img');
-
-			img.src = attr.path;
-
-			if(attr.alt) img.alt = attr.alt;
-			if(attr.title) img.title = attr.title;
-
-			return img;
 		}
 
 		function getImagePath(attr) {
@@ -193,41 +199,6 @@
 			return result;
 		}
 
-		function extend(destination, source) {
-			for (var property in source) {
-				if(source.hasOwnProperty(property)) destination[property] = source[property];
-			}
-
-			return destination;
-		}
-
-		function throttle(fn, threshhold, context) {
-			var 
-				last, deferTimer;
-
-			threshhold = threshhold || 17; // ~ 1000 / 60
-
-			return function() {
-				var
-					now = new Date(),
-					args = arguments;
-
-				context = context || this;
-
-				if (last && now < last + threshhold) {
-					// hold on to it
-					clearTimeout(deferTimer);
-					deferTimer = setTimeout(function() {
-						last = now;
-						fn.apply(context, args);
-					}, threshhold);
-				} else {
-					last = now;
-					fn.apply(context, args);
-				}
-			};
-		}
-
 		function getClosestValues(stack, needle) {
 			var
 				i = 0,
@@ -250,19 +221,6 @@
 			return result;
 		}
 
-		function isElementInViewport(el) {
-			var 
-				top = el.dataset.top || el.getBoundingClientRect().top,
-				docEl = doc.documentElement,
-				isInViewport = top <= (win.pageYOffset || docEl.scrollTop)  - (docEl.clientTop || 0) + (win.innerHeight || docEl.clientHeight);
-
-			if(!isInViewport && !el.dataset.top) {
-				el.dataset.top = top;
-			}
-
-			return isInViewport;
-		}
-
 		// UglifyJS will discard any code within an if (DEBUG) clause
 		if (DEBUG) {
 			test = {
@@ -279,6 +237,41 @@
 			t: test
 		};
 	};
+
+	function extend(destination, source) {
+		for (var property in source) {
+			if(source.hasOwnProperty(property)) destination[property] = source[property];
+		}
+
+		return destination;
+	}
+
+	function throttle(fn, threshhold, context) {
+		var 
+			last, deferTimer;
+
+		threshhold = threshhold || 17; // ~ 1000 / 60
+
+		return function() {
+			var
+				now = new Date(),
+				args = arguments;
+
+			context = context || this;
+
+			if (last && now < last + threshhold) {
+				// hold on to it
+				clearTimeout(deferTimer);
+				deferTimer = setTimeout(function() {
+					last = now;
+					fn.apply(context, args);
+				}, threshhold);
+			} else {
+				last = now;
+				fn.apply(context, args);
+			}
+		};
+	}
 
 	win.Rimd = Rimd;
 })();
