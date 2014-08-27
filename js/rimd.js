@@ -114,7 +114,8 @@
 				heights:        ['320', '600', '1024'],
 				path:           'resimagecrop.php?image={path}&w={width}&h={height}&r={retina}&fx={fx}',
 				reloadOnResize: false,
-				lazyload:       false
+				lazyload:       false,
+				closestAbove:   false
 			},
 			images = [],
 			i = 0,
@@ -258,8 +259,12 @@
 
 			for (; i < len; i++) {
 				diff = stack[i] - needle;
-				// Turn all values positive
-				diff = (diff < 0) ? ~diff : diff;
+				
+				if(!options.closestAbove) {
+					// Turn all values positive
+					diff = (diff < 0) ? ~diff : diff;
+				} else if (diff < 0) continue;
+
 				if(lowDiff === undefined || lowDiff > diff) {
 					lowDiff = diff;
 					result = stack[i];
