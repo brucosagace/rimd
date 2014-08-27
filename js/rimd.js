@@ -271,6 +271,8 @@
 				}
 			}
 
+			if(!result) result = stack[len - 1];
+
 			return result;
 		}
 
