@@ -16,10 +16,14 @@ module.exports = function(grunt) {
 				browser: true, // window, document etc.
 				globals: {
 					Rimd: true,
-					DEBUG: true
+					DEBUG: true,
+					Window: true,
+					HTMLDocument: true
 				},
 				devel: true, // alert, console etc.
-				'-W099': false // Mixed tabs and spaces
+				'-W099': false, // Mixed tabs and spaces
+				'-W084': false,
+				'-W030': false
 			}
 		},
 		qunit: {

@@ -11,8 +11,10 @@ var DEBUG = true;
 				lazyload: true,
 				widths: [100, 200, 300, 400, 500, 600, 700, 800]
 			},
-			rimd;
+			rimd, time;
 
+		time = Date.now();
 		rimd = new Rimd(options);
+		console.log('Execution time: ' + (Date.now() - time) + 'ms');
 	}
 })();

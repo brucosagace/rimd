@@ -64,7 +64,14 @@ var DEBUG = true;
 				path: ''
 			});
 
-			attr = {'src': 'path/to/img.jpg', 'alt': 'alt', 'title': 'title'};
+			attr = {0: {
+				'src': '../../images/IMGP1463.jpg',
+				'alt': 'Alt',
+				'title': 'Title',
+				'offsetHeight': 0,
+				'offsetWidth': 0,
+				'path': ''
+			}};
 
 		}
 	});
@@ -72,6 +79,6 @@ var DEBUG = true;
 	test('getImageAttributes', function(){
 		var elem = rimd.t.legacyGetElementByClass('getImageAttributes');
 
-		deepEqual(rimd.t.getImageAttributes(elem[0]), attr);
+		deepEqual(rimd.t.getImageAttributes(elem), attr);
 	});
 })();
