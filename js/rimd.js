@@ -12,7 +12,8 @@
 	/* window.addEventListener polyfill */
 	!win.addEventListener && (function (WindowPrototype, DocumentPrototype, ElementPrototype, addEventListener, removeEventListener, dispatchEvent, registry) {
 		WindowPrototype[addEventListener] = DocumentPrototype[addEventListener] = ElementPrototype[addEventListener] = function (type, listener) {
-			var target = this;
+			var 
+				target = this;
 
 			registry.unshift([target, type, listener, function (event) {
 				event.currentTarget = target;
@@ -27,7 +28,11 @@
 		};
 
 		WindowPrototype[removeEventListener] = DocumentPrototype[removeEventListener] = ElementPrototype[removeEventListener] = function (type, listener) {
-			for (var index = 0, register; register = registry[index]; ++index) {
+				var 
+					index = 0,
+					register;
+
+			for (; register = registry[index]; ++index) {
 				if (register[0] == this && register[1] == type && register[2] == listener) {
 					return this.detachEvent("on" + type, registry.splice(index, 1)[0][3]);
 				}
@@ -99,9 +104,20 @@
 			win.removeEventListener('resize', resizeHandler);
 		}
 
+		function destruct () {
+			removeListeners();
+
+			if(img && img.parentNode) {
+				img.parentNode.removeChild(img);
+			}
+
+			img = null;
+		}
+
 		return {
-			'removeListeners': removeListeners,
-			'updateImage': updateImage
+			removeListeners: removeListeners,
+			updateImage: updateImage,
+			destruct: destruct
 		};
 	};
 
@@ -119,11 +135,11 @@
 			},
 			images = [],
 			i = 0,
-			elems, attr, resizeHandler, len;
+			elems, attr, resizeHandler, len, test;
 
 		options = extend(defaults, params);
 
-		elems = getElementByClass(options.className),
+		elems = getElementByClass(options.className);
 		attr = getImageAttributes(elems);
 
 		len = elems.length;
@@ -150,7 +166,10 @@
 		}
 
 		function getImagePath(attr) {
-			return options.path.replace(/\{width\}|\{path\}|\{retina\}|\{height\}|\{fx\}/g, function(match, tag, cha){
+			var
+				rex = /\{width\}|\{path\}|\{retina\}|\{height\}|\{fx\}/g;
+
+			return options.path.replace(rex, function(match, tag, cha){
 				return pathReplace(attr, match, tag, cha);
 			});
 		}
@@ -206,11 +225,13 @@
 				i = 0,
 				attr = el.attributes,
 				len = attr.length, 
+				testRex = /^data-/,
+				replaceRex = /-(.)/g,
 				key;
 			
 			for(; i < len; i++) {
-				if (/^data-/.test(attr[i].name)) {
-						key = attr[i].name.substr(5).replace(/-(.)/g);
+				if (testRex.test(attr[i].name)) {
+						key = attr[i].name.substr(5).replace(replaceRex);
 					data[key] = attr[i].value;
 				}
 			}
@@ -256,12 +277,12 @@
 			if(!stack) return needle;
 
 			len = stack.length;
+			result = stack[len - 1];
 
 			for (; i < len; i++) {
 				diff = stack[i] - needle;
-				
+				// Turn all values positive
 				if(!options.closestAbove) {
-					// Turn all values positive
 					diff = (diff < 0) ? ~diff : diff;
 				} else if (diff < 0) continue;
 
@@ -271,13 +292,38 @@
 				}
 			}
 
-			if(!result) result = stack[len - 1];
-
 			return result;
 		}
 
+		function destruct () {
+			var
+				i = 0,
+				len = images.length;
+
+			if(options.reloadOnResize) {
+				win.removeEventListener('resize', resizeHandler);
+			}
+
+			for (;i < len; i++) {
+				images[i].destruct();
+			}
+
+			images = null;
+			elems = null;
+			attr = null;
+		}
+
+		test = {
+			getClosestValues: getClosestValues,
+			getImageAttributes: getImageAttributes,
+			legacyGetElementByClass: legacyGetElementByClass,
+			extend: extend
+		};
+
 		return {
-			options: options
+			destruct: destruct,
+			options: options,
+			t: test
 		};
 	};
 
@@ -297,7 +343,7 @@
 
 		return function() {
 			var
-				now = new Date(),
+				now = Date.now(),
 				args = arguments;
 
 			context = context || this;
