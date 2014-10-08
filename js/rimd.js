@@ -166,10 +166,7 @@
 		}
 
 		function getImagePath(attr) {
-			var
-				rex = /\{width\}|\{path\}|\{retina\}|\{height\}|\{fx\}/g;
-
-			return options.path.replace(rex, function(match, tag, cha){
+			return options.path.replace(/\{width\}|\{path\}|\{retina\}|\{height\}/g, function(match, tag, cha){
 				return pathReplace(attr, match, tag, cha);
 			});
 		}
@@ -195,6 +192,7 @@
 				len = images.length,
 				i = 0,
 				data = {},
+				noscript,
 				key;
 
 			for (; i < len; i++) {
@@ -203,7 +201,9 @@
 				attr[i].offsetWidth = images[i].offsetWidth;
 				attr[i].offsetHeight = images[i].offsetHeight;
 
-				data = images[i].children[0].dataset || getDataAttr(images[i].children[0]);
+				noscript = images[i].getElementsByTagName('noscript')[0];
+
+				data = (noscript.dataset) ? noscript.dataset : getDataAttr(noscript);
 
 				for(key in data) {
 					/* Android DOMStringMap has no method "hasOwnProperty()" */
@@ -223,15 +223,18 @@
 			var 
 				data = {},
 				i = 0,
-				attr = el.attributes,
-				len = attr.length, 
-				testRex = /^data-/,
-				replaceRex = /-(.)/g,
+				attr,
+				len, 
 				key;
+
+			if(typeof el === 'undefined' || !('attributes' in el)) return data;
+
+			attr = el.attributes;
+			len = attr.length;
 			
 			for(; i < len; i++) {
-				if (testRex.test(attr[i].name)) {
-						key = attr[i].name.substr(5).replace(replaceRex);
+				if (/^data-/.test(attr[i].name)) {
+						key = attr[i].name.substr(5).replace(/-(.)/g);
 					data[key] = attr[i].value;
 				}
 			}
@@ -343,7 +346,7 @@
 
 		return function() {
 			var
-				now = Date.now(),
+				now = new Date(),
 				args = arguments;
 
 			context = context || this;

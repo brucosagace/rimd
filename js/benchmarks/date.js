@@ -5,7 +5,8 @@ module.exports = {
 			var now = new Date();
 		},
 		'Date.now()': function() {
-			var now = Date.now();
+			/* IE8 does not have Date.now() */
+			var now = ('now' in Date) ? Date.now() : new Date();
 		}
 	}
 }
