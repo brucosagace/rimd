@@ -44,7 +44,7 @@
 		};
 	})(Window.prototype, HTMLDocument.prototype, Element.prototype, "addEventListener", "removeEventListener", "dispatchEvent", []);
 
-	Img = function(elem, attr, lazyload) {
+	Img = function(elem, attr, lazyload, centerImage) {
 		var
 			scrollHandler = throttle(function() {
 				if(isElementInViewport(elem)) {
@@ -76,6 +76,18 @@
 			img.src = attr.path;
 			if(attr.alt) img.alt = attr.alt;
 			if(attr.title) img.title = attr.title;
+
+			if(centerImage) {
+				if(attr.width) {
+					img.style.left = "50%";
+					img.style.marginLeft = -attr.width / 2 + "px";
+				}
+
+				if(attr.height) {
+					img.style.top = "50%";
+					img.style.marginTop = -attr.height / 2 + "px";
+				}
+			}
 
 			if(!lazyload || isElementInViewport(elem)) {
 				elem.appendChild(img);
@@ -125,26 +137,34 @@
 		var 
 			options = {},
 			defaults = {
+				nodeList:       [],
 				className:      'rimd_img',
 				widths:         ['320', '600', '1024'],
 				heights:        ['320', '600', '1024'],
-				path:           'resimagecrop.php?image={path}&w={width}&h={height}&r={retina}&fx={fx}',
+				path:           'resimagecrop.php?image={path}&w={width}&h={height}&r={retina}',
 				reloadOnResize: false,
 				lazyload:       false,
-				closestAbove:   false
+				closestAbove:   false,
+				centerImage:    false
 			},
 			images = [],
 			i = 0,
 			elems, attr, resizeHandler, len, test;
 
 		options = extend(defaults, params);
+		options.pathHasGet = options.path.split('?').length > 1;
 
-		elems = getElementByClass(options.className);
+		if(options.nodeList.length) {
+			elems = options.nodeList;
+		} else {
+			elems = getElementByClass(options.className);
+		}
+		
 		attr = getImageAttributes(elems);
 
 		len = elems.length;
 		for (;i < len; i++) {
-			images.push(new Img(elems[i], attr[i], options.lazyload));
+			images.push(Img(elems[i], attr[i], options.lazyload, options.centerImage));
 		}
 
 		if(options.reloadOnResize) {
@@ -166,21 +186,47 @@
 		}
 
 		function getImagePath(attr) {
-			return options.path.replace(/\{width\}|\{path\}|\{retina\}|\{height\}/g, function(match, tag, cha){
+			var 
+				parts = attr.src.split('?'),
+				get = parts[1],
+				newPath;
+
+			attr.path = parts[0];
+
+			newPath = options.path.replace(/\{width\}|\{path\}|\{retina\}|\{height\}/g, function(match, tag, cha){
 				return pathReplace(attr, match, tag, cha);
 			});
+
+			if(get) {
+				if(options.pathHasGet) {
+					newPath += '&' + get;
+				} else {
+					newPath += '?' + get;
+				}
+			}
+
+			return newPath;
 		}
 
 		function pathReplace(attr, match) {
+			var
+				tmp;
+
 			switch (match) {
 				case '{path}':
-					return attr.src;
-				case '{fx}':
-					return attr.fx;
+					return attr.path;
 				case '{width}':
-					return getClosestValues(options.widths, attr.offsetWidth) * ((win.devicePixelRatio > 1) ? 2 : 1);
+					tmp = getClosestValues(options.widths, attr.offsetWidth) * ((win.devicePixelRatio > 1) ? 2 : 1);
+
+					attr.width = tmp;
+
+					return tmp;
 				case '{height}':
-					return getClosestValues(options.heights, attr.offsetHeight) * ((win.devicePixelRatio > 1) ? 2 : 1);
+					tmp = getClosestValues(options.heights, attr.offsetHeight) * ((win.devicePixelRatio > 1) ? 2 : 1);
+
+					attr.height = tmp;
+
+					return tmp;
 				case '{retina}':
 					return (win.devicePixelRatio > 1) ? 1 : 0;
 			}

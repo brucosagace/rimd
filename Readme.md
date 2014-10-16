@@ -9,7 +9,7 @@ by Michel Fortin
 
 
 Bild på Pirru 
-![Pirru](images/IMGP1463.jpg)
+![Pirru](images/IMGP1463.jpg?a=b)
 ![Pirru](images/IMGP1463.jpg)
 ![Pirru](images/IMGP1463.jpg)
 
