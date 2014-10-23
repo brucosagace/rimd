@@ -148,30 +148,28 @@
 				centerImage:    false
 			},
 			images = [],
-			i = 0,
-			elems, attr, resizeHandler, len, test;
+			elems = [],
+			attr = [],
+			nodeList, resizeHandler, test;
 
 		options = extend(defaults, params);
 		options.pathHasGet = options.path.split('?').length > 1;
 
 		if(options.nodeList.length) {
-			elems = options.nodeList;
+			nodeList = options.nodeList;
 		} else {
-			elems = getElementByClass(options.className);
+			nodeList = getElementByClass(options.className);
 		}
 		
-		attr = getImageAttributes(elems);
-
-		len = elems.length;
-		for (;i < len; i++) {
-			images.push(Img(elems[i], attr[i], options.lazyload, options.centerImage));
-		}
+		addImages(nodeList);
+		nodeList = null;
 
 		if(options.reloadOnResize) {
 			resizeHandler = throttle(function () {
 				var
 					newAttr = getImageAttributes(elems),
-					i = 0;
+					i = 0,
+					len = elems.length;
 
 				for (; i < len; i++) {
 					if(attr[i].path !== getImagePath(newAttr[i])) {
@@ -183,6 +181,19 @@
 			});
 
 			win.addEventListener('resize', resizeHandler);
+		}
+
+		function addImages(nodeList) {
+			var
+				attributes = getImageAttributes(nodeList),
+				len = nodeList.length,
+				i = 0;
+
+			for (;i < len; i++) {
+				images.push(Img(nodeList[i], attributes[i], options.lazyload, options.centerImage));
+				elems.push(nodeList[i]);
+				attr.push(attributes[i]);
+			}
 		}
 
 		function getImagePath(attr) {
@@ -374,6 +385,7 @@
 			destruct: destruct,
 			options: options,
 			update: resizeHandler,
+			addImages: addImages,
 			t: test
 		};
 	};
