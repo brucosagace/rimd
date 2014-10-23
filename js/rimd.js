@@ -246,7 +246,7 @@
 
 		function getImageAttributes(images) {
 			var 
-				attr = {},
+				attr = [],
 				len = images.length,
 				i = 0,
 				data = {},
