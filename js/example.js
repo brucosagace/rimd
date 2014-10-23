@@ -9,8 +9,7 @@ var DEBUG = true;
 				path: 'resimagecrop.php?image={path}&w={width}',
 				reloadOnResize: true,
 				lazyload: true,
-				widths: [100, 200, 300, 400, 500, 600, 700, 800],
-				centerImage: true
+				widths: [100, 200, 300, 400, 500, 600, 700, 800]
 			},
 			rimd, time;
 

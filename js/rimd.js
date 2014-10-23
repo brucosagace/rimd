@@ -205,6 +205,7 @@
 				}
 			}
 
+			attr.path = newPath;
 			return newPath;
 		}
 
@@ -372,6 +373,7 @@
 		return {
 			destruct: destruct,
 			options: options,
+			update: resizeHandler,
 			t: test
 		};
 	};
