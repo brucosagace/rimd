@@ -138,10 +138,10 @@
 			options = {},
 			defaults = {
 				nodeList:       [],
-				className:      'rimd_img',
+				className:      'rimd',
 				widths:         ['320', '600', '1024'],
 				heights:        ['320', '600', '1024'],
-				path:           'resimagecrop.php?image={path}&w={width}&h={height}&r={retina}',
+				path:           'resimage/?image={path}&w={width}',
 				reloadOnResize: false,
 				lazyload:       false,
 				closestAbove:   false,

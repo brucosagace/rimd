@@ -2,7 +2,6 @@
   "name": "Rimd",
   "version": "0.1.0",
   "description": "Responsive images",
-  "main": "index.js",
   "scripts": {
     "test": "mocha-phantomjs test/test.html"
   },
@@ -23,5 +22,9 @@
     "type": "git",
     "url": "git@github.com:Vinnovera/rimd.git"
   },
+  "bugs": {
+    "url": "https://github.com/Vinnovera/rimd/issues"
+  },
+  "homepage": "https://github.com/Vinnovera/rimd",
   "author": "Per Stenström"
 }
