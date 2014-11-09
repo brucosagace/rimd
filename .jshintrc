@@ -1,0 +1,15 @@
+{
+	"undef": true,
+	"unused": true,
+	"devel": true,
+	"latedef": "nofunc",
+	"newcap": true,
+	"noempty": true,
+	"strict": true,
+	"onevar": true,
+	"browser": true,
+	"globals": {
+		"Window": true,
+		"HTMLDocument": true
+	}
+}

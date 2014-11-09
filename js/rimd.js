@@ -7,7 +7,7 @@
 
 	var
 		Rimd,
-		Img;
+		singleImage;
 
 	/* window.addEventListener polyfill */
 	!win.addEventListener && (function (WindowPrototype, DocumentPrototype, ElementPrototype, addEventListener, removeEventListener, dispatchEvent, registry) {
@@ -32,7 +32,7 @@
 					index = 0,
 					register;
 
-			for (; register = registry[index]; ++index) {
+			for (index; register == registry[index]; ++index) {
 				if (register[0] == this && register[1] == type && register[2] == listener) {
 					return this.detachEvent("on" + type, registry.splice(index, 1)[0][3]);
 				}
@@ -44,7 +44,7 @@
 		};
 	})(Window.prototype, HTMLDocument.prototype, Element.prototype, "addEventListener", "removeEventListener", "dispatchEvent", []);
 
-	Img = function(elem, attr, lazyload, centerImage) {
+	singleImage = function(elem, attr, lazyload, centerImage) {
 		var
 			scrollHandler = throttle(function() {
 				if(isElementInViewport(elem)) {
@@ -190,7 +190,7 @@
 				i = 0;
 
 			for (;i < len; i++) {
-				images.push(Img(nodeList[i], attributes[i], options.lazyload, options.centerImage));
+				images.push(singleImage(nodeList[i], attributes[i], options.lazyload, options.centerImage));
 				elems.push(nodeList[i]);
 				attr.push(attributes[i]);
 			}
