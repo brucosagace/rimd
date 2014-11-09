@@ -228,13 +228,13 @@
 				case '{path}':
 					return attr.path;
 				case '{width}':
-					tmp = getClosestValues(options.widths, attr.offsetWidth) * ((win.devicePixelRatio > 1) ? 2 : 1);
+					tmp = getClosestValues(options.widths, attr.offsetWidth, options.closestAbove) * ((win.devicePixelRatio > 1) ? 2 : 1);
 
 					attr.width = tmp;
 
 					return tmp;
 				case '{height}':
-					tmp = getClosestValues(options.heights, attr.offsetHeight) * ((win.devicePixelRatio > 1) ? 2 : 1);
+					tmp = getClosestValues(options.heights, attr.offsetHeight, options.closestAbove) * ((win.devicePixelRatio > 1) ? 2 : 1);
 
 					attr.height = tmp;
 
@@ -330,7 +330,7 @@
 			return result;
 		}
 
-		function getClosestValues(stack, needle) {
+		function getClosestValues(stack, needle, closestAbove) {
 			var
 				i = 0,
 				len, lowDiff, diff, result;
@@ -343,7 +343,7 @@
 			for (; i < len; i++) {
 				diff = stack[i] - needle;
 				// Turn all values positive
-				if(!options.closestAbove) {
+				if(!closestAbove) {
 					diff = (diff < 0) ? ~diff : diff;
 				} else if (diff < 0) continue;
 

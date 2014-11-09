@@ -25,7 +25,7 @@ var DEBUG = true;
 })();
 
 (function(){
-	var rimd, destination, source, extended;
+	var rimd;
 
 	module('Test methods', {
 		setup: function () {
@@ -34,19 +34,7 @@ var DEBUG = true;
 				path: '/rimd/resimagecrop.php?image={path}&w={width}',
 				widths: [-450, 300, 500, 505]
 			});
-
-			destination = {a:1,b:2,c:3};
-			source      = {a:5,d:4};
-			extended    = {a:5,b:2,c:3,d:4};
 		}
-	});
-
-	test('getClosestValues', function(){
-		equal(rimd.t.getClosestValues(rimd.options.widths, 435), 500);
-	});
-
-	test('extend', function(){
-		deepEqual(rimd.t.extend(destination, source), extended);
 	});
 
 	test('legacyGetElementByClass', function(){
