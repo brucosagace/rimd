@@ -1,14 +1,11 @@
-/* line 1, scss/rimd.scss */
-.rimd_img2,
-.rimd_img {
-  position: relative;
-  display: block;
-  height: 0;
+.rimd {
+	position: relative;
+	display: block;
+	height: 0;
 }
-/* line 6, scss/rimd.scss */
-.rimd_img2 img,
-.rimd_img img {
-  position: absolute;
-  width: 100%;
-  height: auto;
-}
+
+	.rimd img {
+		position: absolute;
+		width: 100%;
+		height: auto;
+	}
