@@ -6,10 +6,12 @@ Rimd 0.1.0 - 9 Nov 2014
 Introduction
 ------------
 
+Rimd is a small javascript library for loading images based on the wrapping element size
+
 Usage
 -----
 
-Works with IE8+
+Supports IE8+
 
 ### Markup
 
@@ -54,7 +56,7 @@ defaults = {
 	 * Path pattern of the image storage
 	 * @type {String}
 	 */
-	path:           'resimage/?image={path}&w={width}&w={width}&r={retina}',
+	path:           'resimage/?image={path}&w={width}&h={height}&r={retina}',
 
 	/**
 	 * Re-evaluate the image on window resize. If a breakpoint is passed the new image will load
@@ -84,9 +86,9 @@ defaults = {
 
 ### options.path
 
-Meaning of the path `resimage/?image={path}&w={width}&w={width}&r={retina}`
+Meaning of the path `resimage/?image={path}&w={width}&h={height}&r={retina}`
 
-```
+```javascript
 // The src of the original image
 {path}
 
@@ -111,7 +113,7 @@ destruct();
 Contribute
 ----------
 
-Install dependencies:
+Install development dependencies:
 
 ```bash
 $ npm install
