@@ -10,6 +10,7 @@
 	"browser": true,
 	"globals": {
 		"Window": true,
-		"HTMLDocument": true
+		"HTMLDocument": true,
+		"DEBUG": true
 	}
 }

@@ -1,5 +1,5 @@
-/*!
- * 
+/**!
+ * @author Per Stenström <per@vinnovera.se>
  */
 
 (function(win, doc) {
@@ -150,7 +150,7 @@
 			images = [],
 			elems = [],
 			attr = [],
-			nodeList, resizeHandler, test;
+			nodeList, resizeHandler, properties;
 
 		options = extend(defaults, params);
 		options.pathHasGet = options.path.split('?').length > 1;
@@ -374,20 +374,23 @@
 			attr = null;
 		}
 
-		test = {
-			getClosestValues: getClosestValues,
-			getImageAttributes: getImageAttributes,
-			legacyGetElementByClass: legacyGetElementByClass,
-			extend: extend
-		};
-
-		return {
+		properties = {
 			destruct: destruct,
 			options: options,
 			update: resizeHandler,
-			addImages: addImages,
-			t: test
+			addImages: addImages
 		};
+
+		if(DEBUG) {
+			properties.test = {
+				getClosestValues: getClosestValues,
+				getImageAttributes: getImageAttributes,
+				legacyGetElementByClass: legacyGetElementByClass,
+				extend: extend
+			};
+		}
+
+		return properties;
 	};
 
 	function extend(destination, source) {

@@ -11,7 +11,7 @@ Usage
 
 ### Options
 
-```js
+```javascript
 defaults = {
 	nodeList:       [],
 	className:      'rimd',
@@ -25,8 +25,22 @@ defaults = {
 };
 ```
 
+### Methods
+
+```javascript
+update();
+addImages();
+destruct();
+```
+
 Contribute
 ----------
+
+Install dependencies:
+
+```bash
+npm install
+```
 
 Run jshint file watcher:
 

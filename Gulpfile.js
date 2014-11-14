@@ -35,7 +35,14 @@
 	gulp.task("buildjs", function() {
 		gulp.src([paths.js.dest + '/*.js', '!' + paths.js.dest + '/*.min.*'])
 			.pipe(gulp.dest(paths.js.dest))
-			.pipe(uglify())
+			.pipe(uglify({
+				compress: {
+					dead_code: true,
+					global_defs: {
+						DEBUG: false
+					}
+				}
+			}))
 			.pipe(rename(function(path) {
 			  path.extname = '.min.js'
 			}))
