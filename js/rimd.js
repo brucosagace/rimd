@@ -63,10 +63,12 @@
 			images = [],
 			elems = [],
 			attr = [],
-			nodeList, resizeHandler, properties;
+			pathHasGet, pathRegex, nodeList, resizeHandler, properties;
 
 		options = extend(defaults, params);
-		options.pathHasGet = options.path.split('?').length > 1;
+
+		pathHasGet = options.path.split('?').length > 1;
+		pathRegex = buildPathRegex();
 
 		if(options.nodeList.length) {
 			nodeList = options.nodeList;
@@ -96,6 +98,19 @@
 			win.addEventListener('resize', resizeHandler);
 		}
 
+		function buildPathRegex() {
+			var
+				rex = /\{([\s\S]+?)\}/g,
+				pathRegex = '',
+				match;
+
+			while((match = rex.exec(options.path)) !== null) {
+				pathRegex += '|\\{' + match[1] + '\\}';
+			}
+
+			return new RegExp(pathRegex.substr(1), 'g');
+		}
+
 		function addImages(nodeList) {
 			var
 				attributes = getImageAttributes(nodeList),
@@ -117,12 +132,12 @@
 
 			attr.path = parts[0];
 
-			newPath = options.path.replace(/\{width\}|\{path\}|\{retina\}|\{height\}/g, function(match, tag, cha){
+			newPath = options.path.replace(pathRegex, function(match, tag, cha){
 				return pathReplace(attr, match, tag, cha);
 			});
 
 			if(get) {
-				if(options.pathHasGet) {
+				if(pathHasGet) {
 					newPath += '&' + get;
 				} else {
 					newPath += '?' + get;
@@ -138,8 +153,6 @@
 				tmp;
 
 			switch (match) {
-				case '{path}':
-					return attr.path;
 				case '{width}':
 					tmp = getClosestValues(options.widths, attr.offsetWidth) * ((options.dubbleSizeRetina && _retinaScreen) ? 2 : 1);
 
@@ -154,6 +167,9 @@
 					return tmp;
 				case '{retina}':
 					return _retinaScreen ? 1 : 0;
+				default:
+					tmp = match.substr(1, match.length - 2);
+					return (tmp in attr) ? attr[tmp] : '';
 			}
 		}
 
@@ -300,6 +316,7 @@
 				getClosestValues: getClosestValues,
 				getImageAttributes: getImageAttributes,
 				legacyGetElementByClass: legacyGetElementByClass,
+				getImagePath: getImagePath,
 				extend: extend
 			};
 		}

@@ -78,4 +78,42 @@ describe('Rimd', function() {
 			}]);
 		}); 
 	});
+
+	describe('getImagePath', function() {
+		it('should return the image src path', function() {
+			var 
+				rimd = new Rimd,
+				path = rimd.test.getImagePath({
+					'src': 'path/to/image.jpg',
+					'offsetWidth': 500
+				});
+
+			expect(path === 'resimage/?image=path/to/image.jpg&w=600').to.be.ok;
+		});
+
+		it('should add arbitrary data values to the path', function() {
+			var 
+				rimd = new Rimd({
+					className: 'getImagePath',
+					path: '{foo}'
+				}),
+				elem = rimd.test.legacyGetElementByClass('getImagePath')[0];
+				img = elem.getElementsByTagName('img')[0];
+
+			expect(img.attributes[0].value === 'bar').to.be.ok;
+		});
+
+		it('should not break even with unreasonable requests', function() {
+			var
+				rimd = new Rimd({
+					path: '{path}/{width}/{nothing}'
+				}),
+				path = rimd.test.getImagePath({
+					'src': 'path/to/image.jpg',
+					'offsetWidth': 500
+				});
+
+			expect(path === 'path/to/image.jpg/600/').to.be.ok;
+		});
+	});
 });
