@@ -8,6 +8,7 @@
 	var
 		Rimd,
 		singleImage;
+		_retinaScreen = (win.devicePixelRatio > 1);
 
 	/* window.addEventListener polyfill */
 	!win.addEventListener && (function (WindowPrototype, DocumentPrototype, ElementPrototype, addEventListener, removeEventListener, dispatchEvent, registry) {
@@ -146,6 +147,7 @@
 				lazyload:       false,
 				closestAbove:   false,
 				centerImage:    false
+				dubbleSizeRetina: false
 			},
 			images = [],
 			elems = [],
@@ -228,19 +230,19 @@
 				case '{path}':
 					return attr.path;
 				case '{width}':
-					tmp = getClosestValues(options.widths, attr.offsetWidth, options.closestAbove) * ((win.devicePixelRatio > 1) ? 2 : 1);
+					tmp = getClosestValues(options.widths, attr.offsetWidth) * ((options.dubbleSizeRetina && _retinaScreen) ? 2 : 1);
 
 					attr.width = tmp;
 
 					return tmp;
 				case '{height}':
-					tmp = getClosestValues(options.heights, attr.offsetHeight, options.closestAbove) * ((win.devicePixelRatio > 1) ? 2 : 1);
+					tmp = getClosestValues(options.heights, attr.offsetHeight) * ((options.dubbleSizeRetina && _retinaScreen) ? 2 : 1);
 
 					attr.height = tmp;
 
 					return tmp;
 				case '{retina}':
-					return (win.devicePixelRatio > 1) ? 1 : 0;
+					return _retinaScreen ? 1 : 0;
 			}
 		}
 
@@ -330,7 +332,7 @@
 			return result;
 		}
 
-		function getClosestValues(stack, needle, closestAbove) {
+		function getClosestValues(stack, needle) {
 			var
 				i = 0,
 				len, lowDiff, diff, result;
@@ -342,8 +344,10 @@
 
 			for (; i < len; i++) {
 				diff = stack[i] - needle;
-				// Turn all values positive
-				if(!closestAbove) {
+
+				if(!options.closestAbove) {
+
+					// Turn all values positive
 					diff = (diff < 0) ? ~diff : diff;
 				} else if (diff < 0) continue;
 
