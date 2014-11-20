@@ -6,147 +6,58 @@
 	"use strict";
 
 	var
-		Rimd,
-		singleImage;
 		_retinaScreen = (win.devicePixelRatio > 1);
 
-	/* window.addEventListener polyfill */
-	!win.addEventListener && (function (WindowPrototype, DocumentPrototype, ElementPrototype, addEventListener, removeEventListener, dispatchEvent, registry) {
-		WindowPrototype[addEventListener] = DocumentPrototype[addEventListener] = ElementPrototype[addEventListener] = function (type, listener) {
-			var 
-				target = this;
-
-			registry.unshift([target, type, listener, function (event) {
-				event.currentTarget = target;
-				event.preventDefault = function () { event.returnValue = false; };
-				event.stopPropagation = function () { event.cancelBubble = true; };
-				event.target = event.srcElement || target;
-
-				listener.call(target, event);
-			}]);
-
-			this.attachEvent("on" + type, registry[0][3]);
-		};
-
-		WindowPrototype[removeEventListener] = DocumentPrototype[removeEventListener] = ElementPrototype[removeEventListener] = function (type, listener) {
+	// window.addEventListener polyfill
+	if(!win.addEventListener) {
+		(function (WindowPrototype, DocumentPrototype, ElementPrototype, addEventListener, removeEventListener, dispatchEvent, registry) {
+			WindowPrototype[addEventListener] = DocumentPrototype[addEventListener] = ElementPrototype[addEventListener] = function (type, listener) {
 				var 
-					index = 0,
-					register;
+					target = this;
 
-			for (index; register == registry[index]; ++index) {
-				if (register[0] == this && register[1] == type && register[2] == listener) {
-					return this.detachEvent("on" + type, registry.splice(index, 1)[0][3]);
+				registry.unshift([target, type, listener, function (event) {
+					event.currentTarget = target;
+					event.preventDefault = function () { event.returnValue = false; };
+					event.stopPropagation = function () { event.cancelBubble = true; };
+					event.target = event.srcElement || target;
+
+					listener.call(target, event);
+				}]);
+
+				this.attachEvent("on" + type, registry[0][3]);
+			};
+
+			WindowPrototype[removeEventListener] = DocumentPrototype[removeEventListener] = ElementPrototype[removeEventListener] = function (type, listener) {
+					var 
+						index = 0,
+						register;
+
+				for (index; register == registry[index]; ++index) {
+					if (register[0] == this && register[1] == type && register[2] == listener) {
+						return this.detachEvent("on" + type, registry.splice(index, 1)[0][3]);
+					}
 				}
-			}
-		};
+			};
 
-		WindowPrototype[dispatchEvent] = DocumentPrototype[dispatchEvent] = ElementPrototype[dispatchEvent] = function (eventObject) {
-			return this.fireEvent("on" + eventObject.type, eventObject);
-		};
-	})(Window.prototype, HTMLDocument.prototype, Element.prototype, "addEventListener", "removeEventListener", "dispatchEvent", []);
+			WindowPrototype[dispatchEvent] = DocumentPrototype[dispatchEvent] = ElementPrototype[dispatchEvent] = function (eventObject) {
+				return this.fireEvent("on" + eventObject.type, eventObject);
+			};
+		})(Window.prototype, HTMLDocument.prototype, Element.prototype, "addEventListener", "removeEventListener", "dispatchEvent", []);
+	}
 
-	singleImage = function(elem, attr, lazyload, centerImage) {
-		var
-			scrollHandler = throttle(function() {
-				if(isElementInViewport(elem)) {
-					elem.appendChild(img);
-
-					removeListeners();
-				}
-			}),
-			resizeHandler = throttle(function() {
-				if(typeof elem.dataset !== 'undefined') {
-					elem.dataset.top = elem.getBoundingClientRect().top;
-				}
-
-				scrollHandler();
-			}),
-			img;
-
-		updateImage(attr);
-
-		function updateImage(attr) {
-			if(!attr.path) return;
-
-			if(img && img.parentNode) {
-				img.parentNode.removeChild(img);
-			}
-
-			img = doc.createElement('img');
-
-			img.src = attr.path;
-			if(attr.alt) img.alt = attr.alt;
-			if(attr.title) img.title = attr.title;
-
-			if(centerImage) {
-				if(attr.width) {
-					img.style.left = "50%";
-					img.style.marginLeft = -attr.width / 2 + "px";
-				}
-
-				if(attr.height) {
-					img.style.top = "50%";
-					img.style.marginTop = -attr.height / 2 + "px";
-				}
-			}
-
-			if(!lazyload || isElementInViewport(elem)) {
-				elem.appendChild(img);
-			} else {
-				removeListeners();
-				win.addEventListener('scroll', scrollHandler); 
-				win.addEventListener('resize', resizeHandler);
-			}
-		}
-
-		function isElementInViewport(el) {
-			var 
-				top = (el.dataset && el.dataset.top) ? el.dataset.top : el.getBoundingClientRect().top,
-				docEl = doc.documentElement,
-				isInViewport = top <= (win.pageYOffset || docEl.scrollTop)  - (docEl.clientTop || 0) + (win.innerHeight || docEl.clientHeight);
-
-			if(!isInViewport && el.dataset && !el.dataset.top) {
-				el.dataset.top = top;
-			}
-
-			return isInViewport;
-		}
-
-		function removeListeners() {
-			win.removeEventListener('scroll', scrollHandler);
-			win.removeEventListener('resize', resizeHandler);
-		}
-
-		function destruct () {
-			removeListeners();
-
-			if(img && img.parentNode) {
-				img.parentNode.removeChild(img);
-			}
-
-			img = null;
-		}
-
-		return {
-			removeListeners: removeListeners,
-			updateImage: updateImage,
-			destruct: destruct
-		};
-	};
-
-	Rimd = function(params) {
+	function Rimd(params) {
 		var 
 			options = {},
 			defaults = {
-				nodeList:       [],
-				className:      'rimd',
-				widths:         ['320', '600', '1024'],
-				heights:        ['320', '600', '1024'],
-				path:           'resimage/?image={path}&w={width}',
-				reloadOnResize: false,
-				lazyload:       false,
-				closestAbove:   false,
-				centerImage:    false
+				nodeList:         [],
+				className:        'rimd',
+				widths:           ['320', '600', '1024'],
+				heights:          ['320', '600', '1024'],
+				path:             'resimage/?image={path}&w={width}',
+				reloadOnResize:   false,
+				lazyload:         false,
+				closestAbove:     false,
+				centerImage:      false,
 				dubbleSizeRetina: false
 			},
 			images = [],
@@ -276,9 +187,7 @@
 			return attr;
 		}
 
-		/*
-		 * el.dataset fallback for IE8
-		 */
+		// el.dataset fallback for IE8
 		function getDataAttr(el) {
 			var 
 				data = {},
@@ -294,7 +203,7 @@
 			
 			for(; i < len; i++) {
 				if (/^data-/.test(attr[i].name)) {
-						key = attr[i].name.substr(5).replace(/-(.)/g);
+					key = attr[i].name.substr(5).replace(/-(.)/g);
 					data[key] = attr[i].value;
 				}
 			}
@@ -385,6 +294,7 @@
 			addImages: addImages
 		};
 
+		// UglifyJS will remove this block
 		if(DEBUG) {
 			properties.test = {
 				getClosestValues: getClosestValues,
@@ -395,7 +305,96 @@
 		}
 
 		return properties;
-	};
+	}
+
+	function singleImage(elem, attr, lazyload, centerImage) {
+		var
+			scrollHandler = throttle(function() {
+				if(isElementInViewport(elem)) {
+					elem.appendChild(img);
+
+					removeListeners();
+				}
+			}),
+			resizeHandler = throttle(function() {
+				if(typeof elem.dataset !== 'undefined') {
+					elem.dataset.top = elem.getBoundingClientRect().top;
+				}
+
+				scrollHandler();
+			}),
+			img;
+
+		updateImage(attr);
+
+		function updateImage(attr) {
+			if(!attr.path) return;
+
+			if(img && img.parentNode) {
+				img.parentNode.removeChild(img);
+			}
+
+			img = doc.createElement('img');
+
+			img.src = attr.path;
+			if(attr.alt) img.alt = attr.alt;
+			if(attr.title) img.title = attr.title;
+
+			if(centerImage) {
+				if(attr.width) {
+					img.style.left = "50%";
+					img.style.marginLeft = -attr.width / 2 + "px";
+				}
+
+				if(attr.height) {
+					img.style.top = "50%";
+					img.style.marginTop = -attr.height / 2 + "px";
+				}
+			}
+
+			if(!lazyload || isElementInViewport(elem)) {
+				elem.appendChild(img);
+			} else {
+				removeListeners();
+				win.addEventListener('scroll', scrollHandler); 
+				win.addEventListener('resize', resizeHandler);
+			}
+		}
+
+		function isElementInViewport(el) {
+			var 
+				top = (el.dataset && el.dataset.top) ? el.dataset.top : el.getBoundingClientRect().top,
+				docEl = doc.documentElement,
+				isInViewport = top <= (win.pageYOffset || docEl.scrollTop)  - (docEl.clientTop || 0) + (win.innerHeight || docEl.clientHeight);
+
+			if(!isInViewport && el.dataset && !el.dataset.top) {
+				el.dataset.top = top;
+			}
+
+			return isInViewport;
+		}
+
+		function removeListeners() {
+			win.removeEventListener('scroll', scrollHandler);
+			win.removeEventListener('resize', resizeHandler);
+		}
+
+		function destruct () {
+			removeListeners();
+
+			if(img && img.parentNode) {
+				img.parentNode.removeChild(img);
+			}
+
+			img = null;
+		}
+
+		return {
+			removeListeners: removeListeners,
+			updateImage: updateImage,
+			destruct: destruct
+		};
+	}
 
 	function extend(destination, source) {
 		for (var property in source) {
