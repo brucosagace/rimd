@@ -97,10 +97,18 @@ describe('Rimd', function() {
 					className: 'getImagePath',
 					path: '{foo}'
 				}),
-				elem = rimd.test.legacyGetElementByClass('getImagePath')[0];
-				img = elem.getElementsByTagName('img')[0];
+				elem = rimd.test.legacyGetElementByClass('getImagePath')[0],
+				img = elem.getElementsByTagName('img')[0],
+				i, len;
 
-			expect(img.attributes[0].value === 'bar').to.be.ok;
+			for(i = 0, len = img.attributes.length; i < len; i++) {
+				if(img.attributes[i].name === 'src') {
+					expect(img.attributes[i].value === 'bar').to.be.ok;
+					return;
+				}
+			}
+
+			throw new Error('src attribute not found');
 		});
 
 		it('should not break even with unreasonable requests', function() {

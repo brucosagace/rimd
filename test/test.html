@@ -3,8 +3,10 @@
 <head>  
 	<title></title>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../node_modules/mocha-phantomjs/node_modules/mocha/mocha.css">
 </head>  
 <body>  
+	<div id="mocha"></div>
 	<script src="../node_modules/mocha-phantomjs/node_modules/mocha/mocha.js"></script>
 	<script src="../node_modules/chai/chai.js"></script>
 	<script>
@@ -20,6 +22,7 @@
 			mocha.run();
 		}
 	</script>
+
 
 	<div class="rimd" style="width: 400px;">
 		<noscript data-src="path/to/image.jpg" data-alt="Alt" data-title="Title"></noscript>
