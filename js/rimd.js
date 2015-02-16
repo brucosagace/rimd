@@ -127,7 +127,7 @@
 		function getImagePath(attr) {
 			var 
 				parts = attr.src.split('?'),
-				get = parts[1],
+				get,
 				newPath;
 
 			attr.path = parts[0];
@@ -136,7 +136,9 @@
 				return pathReplace(attr, match, tag, cha);
 			});
 
-			if(get) {
+			if(parts.length > 1) {
+				get  = parts[1];
+				
 				if(pathHasGet) {
 					newPath += '&' + get;
 				} else {
