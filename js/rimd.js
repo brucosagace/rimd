@@ -162,17 +162,31 @@
 
 					return tmp;
 				case '{height}':
-					tmp = getClosestValues(options.heights, attr.offsetHeight) * ((options.dubbleSizeRetina && _retinaScreen) ? 2 : 1);
-
-					attr.height = tmp;
-
-					return tmp;
+					return getHeight(attr);
 				case '{retina}':
 					return _retinaScreen ? 1 : 0;
+				case '{quality}':
+					return _retinaScreen ? 40 : 80;
 				default:
 					tmp = match.substr(1, match.length - 2);
 					return (tmp in attr) ? attr[tmp] : '';
 			}
+		}
+
+		function getHeight (attr) {
+			var height;
+
+			if(typeof options.heights === 'Object') {
+				height = getClosestValues(options.heights, attr.offsetHeight);
+			} else if(options.heights === 'aspectratio') {
+				height = ~~((attr.offsetHeight / attr.offsetWidth) * getClosestValues(options.widths, attr.offsetWidth));
+			}
+
+			height = height * ((options.dubbleSizeRetina && _retinaScreen) ? 2 : 1);
+
+			attr.height = height;
+
+			return height;
 		}
 
 		function getImageAttributes(images) {
@@ -358,6 +372,7 @@
 			img.src = attr.path;
 			if(attr.alt) img.alt = attr.alt;
 			if(attr.title) img.title = attr.title;
+			if(attr.class) img.className = attr.class;
 
 			if(centerImage) {
 				if(attr.width) {
