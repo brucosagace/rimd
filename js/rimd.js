@@ -63,6 +63,7 @@
 			images = [],
 			elems = [],
 			attr = [],
+			queue = [],
 			pathHasGet, pathRegex, nodeList, resizeHandler, properties;
 
 		options = extend(defaults, params);
@@ -118,9 +119,13 @@
 				i = 0;
 
 			for (;i < len; i++) {
-				images.push(singleImage(nodeList[i], attributes[i], options.lazyload, options.centerImage));
-				elems.push(nodeList[i]);
-				attr.push(attributes[i]);
+				if(attributes[i].offsetWidth) {
+					images.push(singleImage(nodeList[i], attributes[i], options.lazyload, options.centerImage));
+					elems.push(nodeList[i]);
+					attr.push(attributes[i]);
+				} else {
+					queue.push(nodeList[i]);
+				}
 			}
 		}
 
@@ -256,9 +261,9 @@
 			}
 
 			return result;
-    }
+		}
 
-    function legacyGetElementByClass(selector) {
+		function legacyGetElementByClass(selector) {
 			var 
 				result = [],
 				elems = doc.getElementsByTagName('*'),
@@ -271,6 +276,14 @@
 			}
 
 			return result;
+		}
+
+		function updateQueue() {
+			var imageQueue = queue;
+
+			// Reset queue
+			queue = [];
+			addImages(imageQueue);
 		}
 
 		function getClosestValues(stack, needle) {
@@ -323,7 +336,8 @@
 			destruct: destruct,
 			options: options,
 			update: resizeHandler,
-			addImages: addImages
+			addImages: addImages,
+			updateQueue: updateQueue 
 		};
 
 		// UglifyJS will remove this block
